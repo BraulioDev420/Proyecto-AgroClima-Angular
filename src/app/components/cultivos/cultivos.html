@@ -1,1 +1,155 @@
-<p>cultivos works!</p>
+<div class="cultivos-dashboard">
+
+<section class="cards">
+  <div class="card">
+    <div class="card-icon">🌱</div>
+    <div class="card-content">
+      <h3>Total Cultivos</h3>
+      <p class="card-value">{{ cultivosActivos.length }}</p>
+      <span class="card-label">Activos</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-icon">📏</div>
+    <div class="card-content">
+      <h3>Área Total</h3>
+      <p class="card-value">{{ dashboardData?.areaTotal }} ha</p>
+      <span class="card-label">Hectáreas</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-icon">📈</div>
+    <div class="card-content">
+      <h3>Rendimiento</h3>
+      <p class="card-value">{{ dashboardData?.rendimiento }} ton</p>
+      <span class="card-label">Toneladas</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-icon">💰</div>
+    <div class="card-content">
+      <h3>Ingresos</h3>
+      <p class="card-value">${{ dashboardData?.ingresos}}</p>
+      <span class="card-label">Este mes</span>
+    </div>
+  </div>
+</section>
+
+  <div class="dashboard-container">
+    <h2>📊 Panel de Análisis</h2>
+
+    <div class="charts-grid">
+      <div class="chart-card">
+        <h3>Rendimiento General</h3>
+        <canvas id="overviewChart"></canvas>
+      </div>
+
+      <div class="chart-card">
+        <h3>Comparativa de Cosechas</h3>
+        <canvas id="yieldChart"></canvas>
+      </div>
+
+      <div class="chart-card">
+        <h3>Distribución por Tipo</h3>
+        <canvas id="pieChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <section class="tabla-cultivos">
+    <h2>🌱 Cultivos Activos</h2>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Cultivo</th>
+            <th>Lote</th>
+            <th>Área</th>
+            <th>Estado</th>
+            <th>Última actualización</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Maíz</strong></td>
+            <td>17</td>
+            <td>4.6 ha</td>
+            <td><span class="estado crecimiento">🌿 Crecimiento</span></td>
+            <td>05/11/2025</td>
+          </tr>
+          <tr>
+            <td><strong>Café</strong></td>
+            <td>22</td>
+            <td>3.2 ha</td>
+            <td><span class="estado recoleccion">☀️ Recolección</span></td>
+            <td>02/11/2025</td>
+          </tr>
+          <tr>
+            <td><strong>Papa</strong></td>
+            <td>9</td>
+            <td>2 ha</td>
+            <td><span class="estado siembra">🌾 Siembra</span></td>
+            <td>29/10/2025</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- TAREAS Y CLIMA -->
+  <section class="extras">
+    <div class="tareas">
+      <h2>🧑‍🌾 Próximas Tareas</h2>
+      <ul>
+        <li>
+          <div class="tarea-info">
+            <strong>Riego</strong>
+            <span class="tarea-detalles">Lote 17 - 06/11/2025</span>
+          </div>
+          <span class="pendiente">Pendiente</span>
+        </li>
+        <li>
+          <div class="tarea-info">
+            <strong>Fertilización</strong>
+            <span class="tarea-detalles">Lote 9 - 08/11/2025</span>
+          </div>
+          <span class="programada">Programada</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="clima">
+      <h2>🌤️ Clima Actual</h2>
+      <div class="clima-info">
+        <div class="clima-item">
+          <span class="clima-icon">🌡️</span>
+          <div>
+            <p class="clima-label">Temperatura</p>
+            <p class="clima-value">28°C</p>
+          </div>
+        </div>
+        <div class="clima-item">
+          <span class="clima-icon">💧</span>
+          <div>
+            <p class="clima-label">Humedad</p>
+            <p class="clima-value">70%</p>
+          </div>
+        </div>
+        <div class="clima-item">
+          <span class="clima-icon">💨</span>
+          <div>
+            <p class="clima-label">Viento</p>
+            <p class="clima-value">12 km/h</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>© 2025 AgroClima | Prototipo de visualización de cultivos</p>
+  </footer>
+</div>

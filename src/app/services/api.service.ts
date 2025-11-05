@@ -14,17 +14,14 @@ export class ApiService {
   }
 
   post(endpoint: string, data: any) {
-    return this.http.get(`${this.baseUrl}/${endpoint}`, data);
+    return this.http.post(`${this.baseUrl}/${endpoint}`, data);
   }
 
   put(endpoint: string, data: any) {
-    return this.http.get(`${this.baseUrl}/${endpoint}`, data);
+    return this.http.put(`${this.baseUrl}/${endpoint}`, data);
   }
 
   delete(endpoint: string) {
-    return this.http.get(`${this.baseUrl}/${endpoint}`); 
+    return this.http.delete(`${this.baseUrl}/${endpoint}`); 
   }
-
-
-
 }
