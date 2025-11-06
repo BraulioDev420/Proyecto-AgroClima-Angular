@@ -1,36 +1,34 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
 import { ApiService } from './api.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  
+
   constructor(private apiService: ApiService) {}
 
-  login(correo: string, contrasena: string): Observable<any> {
-    const credentials = {
-      correo: correo,
-      contrasena: contrasena
-    };
-    return this.apiService.post('login', credentials);
+  login(correo: string, contrasena: string) {
+    // devuelve Observable de la petición al backend
+    return this.apiService.post('login', { correo, contrasena });
   }
 
   guardarUsuario(user: any) {
     localStorage.setItem('usuario', JSON.stringify(user));
+    localStorage.setItem('isLoggedIn', 'true');   // flag sencillo usado por el guard
   }
 
   obtenerUsuario() {
-    const user = localStorage.getItem('usuario');
-    return user ? JSON.parse(user) : null;
+    const u = localStorage.getItem('usuario');
+    return u ? JSON.parse(u) : null;
   }
 
   cerrarSesion() {
     localStorage.removeItem('usuario');
+    localStorage.removeItem('isLoggedIn');
   }
 
   estaAutenticado(): boolean {
-    return this.obtenerUsuario() !== null;
+    return localStorage.getItem('isLoggedIn') === 'true';
   }
 }
