@@ -7,16 +7,16 @@ import { Home } from './components/home/home';
 import { Login } from './components/login/login';
 
 export const routes: Routes = [
-  /* //ruta para logeo en prueba
+  //ruta para logeo en prueba
     { path: '', redirectTo: 'login', pathMatch: 'full' },
     { path: 'login', component: Login },
     { path: 'home', component: Home },
     { path: 'usuarios', component: Usuarios },
-    { path: 'cultivos', component: Cultivos } */
+    { path: 'cultivos', component: Cultivos } 
 
-  { path: '', component: Home },
+  /* { path: '', component: Home },
   { path: 'usuarios', component: Usuarios },
-  { path: 'cultivos', component: Cultivos },
+  { path: 'cultivos', component: Cultivos }, */
 ];
 
 @NgModule({

@@ -28,16 +28,22 @@
 
     <h2>Iniciar Sesión</h2>
 
-    <form>
+    <form (ngSubmit)="onLogin()">
       <div class="input-group">
-        <input type="email" [(ngModel)]="correo" placeholder="Correo" required />
+        <input type="email" name="correo" [(ngModel)]="correo" placeholder="Correo" required />
       </div>
 
       <div class="input-group">
-        <input type="password" [(ngModel)]="contrasena" placeholder="Constarresa" required />
+        <input
+          type="password"
+          name="contrasena"
+          [(ngModel)]="contrasena"
+          placeholder="Contraseña"
+          required
+        />
       </div>
 
-      <button (click)="onLogin()" type="submit" class="btn-login">Ingresar</button>
+      <button type="submit" class="btn-login">Ingresar</button>
     </form>
 
     <div class="register-link">¿No tienes cuenta? <a href="#">Regístrate</a></div>
