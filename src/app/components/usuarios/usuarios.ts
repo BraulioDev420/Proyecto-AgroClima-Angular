@@ -141,25 +141,28 @@ export class Usuarios {
 
   // ➕ Crear nueva publicación solo contenido
   crearPublicacion() {
-    const usuario = JSON.parse(localStorage.getItem('usuario') || '{}');
-    if (!usuario.id_usuario) return;
+  const usuario = JSON.parse(localStorage.getItem('usuario') || '{}');
+  if (!usuario.id_usuario) return;
 
-    const nueva = {
-      id_usuario: usuario.id_usuario,
-      contenido: this.nuevaPublicacion.contenido.trim(),
-      fecha_publicacion: new Date().toISOString(),
-      EstLogico: 1,
-    };
+  const fecha = new Date();
+  const fechaFormateada = fecha.toISOString().slice(0, 19).replace('T', ' ');
 
-    if (!nueva.contenido) return;
+  const nueva = {
+    id_usuario: usuario.id_usuario,
+    contenido: this.nuevaPublicacion.contenido.trim(),
+    fecha_publicacion: fechaFormateada,
+    EstLogico: 1,
+  };
 
-    this.api.post('publicaciones', nueva).subscribe({
-      next: () => {
-        this.nuevaPublicacion = { contenido: '' };
-        this.cargarPublicaciones();
-        this.cargarMisPublicaciones();
-      },
-      error: (err) => {},
-    });
-  }
+  if (!nueva.contenido) return;
+
+  this.api.post('publicaciones', nueva).subscribe({
+    next: () => {
+      this.nuevaPublicacion = { contenido: '' };
+      this.cargarPublicaciones();
+      this.cargarMisPublicaciones();
+    },
+    error: (err) => {},
+  });
+}
 }

@@ -1,0 +1,8 @@
+:host {
+  display: block;
+  /* 💚 Fondo verde acogedor */
+  background: linear-gradient(180deg, #e8f5e9, #d0f0c0);
+  min-height: 100vh;
+  font-family: 'Inter', sans-serif;
+  color: #2d3748;
+}
