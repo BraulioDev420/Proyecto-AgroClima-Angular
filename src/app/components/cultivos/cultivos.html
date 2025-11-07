@@ -43,6 +43,61 @@
   </div>
 </div>
 
+<!-- ➕ MODAL FORMULARIO CREAR CULTIVO -->
+<div *ngIf="mostrarFormulario" class="modal-overlay">
+  <div class="modal-form">
+    <div class="modal-header">
+      <h2>🌱 Nuevo Cultivo</h2>
+      <button class="btn-cerrar" (click)="cerrarFormulario()">✕</button>
+    </div>
+    
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Tipo de Cultivo *</label>
+        <input 
+          type="text" 
+          [(ngModel)]="nuevoCultivo.tipo_cultivo"
+          placeholder="Ej: Maíz, Arroz, Yuca"
+        >
+      </div>
+
+      <div class="form-group">
+        <label>Fecha de Siembra *</label>
+        <input 
+          type="date" 
+          [(ngModel)]="nuevoCultivo.fecha_siembra"
+        >
+      </div>
+
+      <div class="form-group">
+        <label>Fecha de Cosecha (Opcional)</label>
+        <input 
+          type="date" 
+          [(ngModel)]="nuevoCultivo.fecha_cosecha"
+        >
+      </div>
+
+      <div class="form-group">
+        <label>Estado</label>
+        <select [(ngModel)]="nuevoCultivo.estado">
+          <option value="siembra">Siembra</option>
+          <option value="en crecimiento">En Crecimiento</option>
+          <option value="cosechado">Cosechado</option>
+        </select>
+      </div>
+    </div>
+    
+    <div class="modal-footer">
+      <button class="btn-cancelar" (click)="cerrarFormulario()">
+        Cancelar
+      </button>
+      <button class="btn-guardar" (click)="guardarCultivo()">
+        💾 Guardar Cultivo
+      </button>
+    </div>
+  </div>
+</div>
+
 <!-- TARJETAS DE RESUMEN -->
 <section class="cards">
   <div class="card">
@@ -80,6 +135,13 @@
       <span class="card-label">Este mes</span>
     </div>
   </div>
+</section>
+
+<!-- BOTÓN CREAR CULTIVO -->
+<section class="accion-crear">
+  <button class="btn-crear" (click)="abrirFormulario()">
+    ➕ Crear Nuevo Cultivo
+  </button>
 </section>
 
 <!-- PANEL DE ANÁLISIS -->

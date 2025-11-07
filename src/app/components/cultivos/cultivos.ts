@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Chart, registerables } from 'chart.js';
 import { CultivosService, Cultivo, DashboardData } from '../../services/cultivos.service';
 import { AuthService } from '../../services/auth.service';
@@ -11,7 +12,7 @@ Chart.register(...registerables);
 @Component({
   selector: 'app-cultivos',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './cultivos.html',
   styleUrls: ['./cultivos.css']
 })
@@ -29,6 +30,15 @@ export class Cultivos implements OnInit, OnDestroy, AfterViewInit {
   // 📋 TAREAS PREDETERMINADAS
   tareas: Tarea[] = [];
   tareasDestacadas: Tarea[] = [];
+  
+  // ➕ CREAR CULTIVO
+  mostrarFormulario: boolean = false;
+  nuevoCultivo = {
+    tipo_cultivo: '',
+    fecha_siembra: '',
+    fecha_cosecha: '',
+    estado: 'siembra'
+  };
   
   idUsuarioActual: number = 0;
   chartRendimiento: Chart | null = null;
@@ -130,6 +140,68 @@ export class Cultivos implements OnInit, OnDestroy, AfterViewInit {
         console.error('❌ Error al cargar cultivos:', error);
         this.cargando = false;
         this.manejarErrorCarga(error);
+      }
+    });
+  }
+
+  /**
+   * ➕ ABRIR FORMULARIO DE CREAR CULTIVO
+   */
+  abrirFormulario() {
+    this.mostrarFormulario = true;
+  }
+
+  /**
+   * ❌ CERRAR FORMULARIO
+   */
+  cerrarFormulario() {
+    this.mostrarFormulario = false;
+    this.limpiarFormulario();
+  }
+
+  /**
+   * 🧹 LIMPIAR FORMULARIO
+   */
+  limpiarFormulario() {
+    this.nuevoCultivo = {
+      tipo_cultivo: '',
+      fecha_siembra: '',
+      fecha_cosecha: '',
+      estado: 'siembra'
+    };
+  }
+
+  /**
+   * 💾 GUARDAR NUEVO CULTIVO
+   */
+  guardarCultivo() {
+    // Validaciones
+    if (!this.nuevoCultivo.tipo_cultivo || !this.nuevoCultivo.fecha_siembra) {
+      alert('⚠️ Completa los campos obligatorios (Tipo de Cultivo y Fecha de Siembra)');
+      return;
+    }
+
+    const cultivoData = {
+      id_usuario: this.idUsuarioActual,
+      tipo_cultivo: this.nuevoCultivo.tipo_cultivo.toLowerCase(),
+      fecha_siembra: this.nuevoCultivo.fecha_siembra,
+      fecha_cosecha: this.nuevoCultivo.fecha_cosecha || null,
+      estado: this.nuevoCultivo.estado,
+      EstLogico: 1
+    };
+
+    console.log('📤 Enviando cultivo:', cultivoData);
+
+    this.cultivosService.crearCultivo(cultivoData).subscribe({
+      next: (response) => {
+        console.log('✅ Cultivo creado:', response);
+        alert('✅ Cultivo creado exitosamente');
+        this.cerrarFormulario();
+        this.cargarDatos(); // Recargar lista
+      },
+      error: (error) => {
+        console.error('❌ Error al crear cultivo:', error);
+        alert('❌ Error al crear cultivo. Intenta nuevamente.');
       }
     });
   }
