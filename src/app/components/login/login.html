@@ -34,13 +34,7 @@
       </div>
 
       <div class="input-group">
-        <input
-          type="password"
-          name="contrasena"
-          [(ngModel)]="contrasena"
-          placeholder="Contraseña"
-          required
-        />
+        <input type="password" name="contrasena" [(ngModel)]="contrasena" placeholder="Contraseña" required />
       </div>
 
       <button type="submit" class="btn-login">Ingresar</button>
@@ -52,43 +46,3 @@
     </div>
   </div>
 </div>
-
-<script>
-  // Crear gotas de lluvia
-  const rainContainer = document.getElementById('rain');
-  for (let i = 0; i < 50; i++) {
-    const drop = document.createElement('div');
-    drop.className = 'drop';
-    drop.style.left = Math.random() * 100 + '%';
-    drop.style.top = Math.random() * -100 + 'px'; // Posición inicial arriba de la pantalla
-    drop.style.animationDuration = Math.random() * 2 + 3 + 's'; // 3 a 5 segundos
-    drop.style.animationDelay = Math.random() * 5 + 's';
-    rainContainer.appendChild(drop);
-  }
-
-  // Crear hojas cayendo
-  const leavesContainer = document.getElementById('leaves');
-  const leafSymbols = ['🍃', '🌿'];
-  for (let i = 0; i < 15; i++) {
-    const leaf = document.createElement('div');
-    leaf.className = 'leaf';
-    leaf.textContent = leafSymbols[Math.floor(Math.random() * leafSymbols.length)];
-
-    leaf.style.left = Math.random() * 100 + '%'; // posición horizontal
-    leaf.style.animationDuration = Math.random() * 3 + 5 + 's'; // 5 a 8 segundos
-    leaf.style.animationDelay = Math.random() * 5 + 's';
-
-    leavesContainer.appendChild(leaf);
-  }
-
-  // Crear filas del campo
-  const fieldRows = document.getElementById('fieldRows');
-  for (let i = 0; i < 12; i++) {
-    const row = document.createElement('div');
-    row.className = 'row';
-    row.style.bottom = i * 8 + '%';
-    row.style.transform = `perspective(200px) rotateX(${45 - i * 2}deg)`;
-    row.style.opacity = 0.3 + i * 0.05;
-    fieldRows.appendChild(row);
-  }
-</script>

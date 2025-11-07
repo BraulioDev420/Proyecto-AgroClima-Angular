@@ -1,20 +1,26 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-navbar',
-  standalone: true,
   templateUrl: './navbar.html',
-  styleUrls: ['./navbar.css']
+  styleUrls: ['./navbar.css'],
+  standalone: true,
+  imports: [CommonModule],
 })
 export class Navbar {
-  constructor(private authService: AuthService, private router: Router) {}
+  usuarioLogueado: { nombre: string } | null = null;
 
-  salir() {
-    // Cierra la sesión
-    this.authService.cerrarSesion();
-    // Redirige al login
+  constructor(private router: Router) {
+    // Mismo método que en tus publicaciones
+    const usuario = localStorage.getItem('usuario');
+    this.usuarioLogueado = usuario ? JSON.parse(usuario) : null;
+  }
+  
+  cerrarSesion() {
+    localStorage.removeItem('usuario');
+    this.usuarioLogueado = null;
     this.router.navigate(['/login']);
   }
 }

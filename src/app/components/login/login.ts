@@ -32,7 +32,7 @@ export class Login {
           this.authService.guardarUsuario(res.user);
           alert(res.message); // Muestra: "Inicio de sesión exitoso"
           // Navegar al home
-          this.router.navigate(['/home']);
+          this.router.navigate(['/']);
         } else {
           alert('Correo o contraseña incorrectos');
         }

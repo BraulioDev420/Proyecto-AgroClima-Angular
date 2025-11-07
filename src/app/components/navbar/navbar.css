@@ -1,0 +1,107 @@
+/* Navbar Glassmorphism */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem 2rem;
+  backdrop-filter: blur(10px);
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 1rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Logo */
+.logo {
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: #2d3748;
+}
+
+/* Links */
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 1.5rem;
+  margin-left: 2rem;
+}
+
+.nav-links li a {
+  text-decoration: none;
+  color: #2d3748;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.nav-links li a:hover {
+  color: #38a169;
+  transform: scale(1.05);
+}
+
+/* Usuario logueado */
+.usuario-nombre {
+  margin-right: 1rem;
+  font-weight: 600;
+  color: #2d3748;
+}
+
+/* Botones */
+.btn-salir,
+.btn-login,
+.btn-register {
+  border: none;
+  padding: 0.4rem 1rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-salir {
+  background-color: #e53e3e;
+  color: white;
+}
+
+.btn-salir:hover {
+  background-color: #c53030;
+}
+
+.btn-login {
+  background-color: #38a169;
+  color: white;
+  margin-right: 0.5rem;
+}
+
+.btn-login:hover {
+  background-color: #2f855a;
+}
+
+.btn-register {
+  background-color: #4299e1;
+  color: white;
+}
+
+.btn-register:hover {
+  background-color: #3182ce;
+}
+
+/* Ajuste responsive */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .nav-links {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .navbar-right {
+    display: flex;
+    gap: 0.5rem;
+  }
+}

@@ -1,35 +1,33 @@
-<nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
-  <div class="container-fluid" bis_skin_checked="1">
-    <a class="navbar-brand" href="/">AgroClima</a>
-    <button
-      class="navbar-toggler"
-      type="button"
-      data-bs-toggle="collapse"
-      data-bs-target="#navbarColor01"
-      aria-controls="navbarColor01"
-      aria-expanded="false"
-      aria-label="Toggle navigation"
-    >
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarColor01" bis_skin_checked="1">
-      <ul class="navbar-nav me-auto">
-        <li class="nav-item">
-          <a class="nav-link active" href="/"
-            >Home
-            <span class="visually-hidden">(current)</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/usuarios">Publicaciones</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/cultivos">Cultivos</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#" (click)="salir()">Salir</a>
-        </li>
-      </ul>
-    </div>
+<nav class="navbar">
+  <div class="navbar-left">
+    <div class="logo">🌱 AgroClima</div>
+    <ul class="nav-links">
+      <li class="nav-item">
+        <a class="nav-link" href="/">Inicio</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/usuarios">Comentarios</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/cultivos">Cultivos</a>
+      </li>
+    </ul>
+  </div>
+
+  <div class="navbar-right">
+    <ng-container *ngIf="usuarioLogueado; else noLogin">
+      <span class="usuario-nombre">👤 {{ usuarioLogueado.nombre }}</span>
+      <button class="btn-salir" (click)="cerrarSesion()">Salir</button>
+    </ng-container>
+
+    <ng-template #noLogin>
+      <li class="nav-item">
+        <a class="nav-link" href="/login">Iniciar Sesion</a>
+      </li>
+       <li class="nav-item">
+        <a class="nav-link" href="/register">Register</a>
+      </li>
+      
+    </ng-template>
   </div>
 </nav>

@@ -14,8 +14,8 @@ export const routes: Routes = [
   { path: 'login', component: Login },
   { path: 'register', component: Register },
   { path: '', component: Home },
-  { path: 'usuarios', component: Usuarios, canActivate: [AuthGuard] },
-  { path: 'cultivos', component: Cultivos, canActivate: [AuthGuard] },
+  { path: 'usuarios', component: Usuarios },
+  { path: 'cultivos', component: Cultivos },
 ];
 
 @NgModule({
