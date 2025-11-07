@@ -1,1 +1,103 @@
-<p>usuarios works!</p>
+<div class="container mt-4">
+  <!-- ➕ Crear Publicación -->
+  <div class="mb-4">
+    <h2 class="text-center mb-3">➕ Crear Nueva Publicación</h2>
+
+    <div class="mb-2">
+      <textarea
+        [(ngModel)]="nuevaPublicacion.contenido"
+        class="form-control"
+        rows="3"
+        placeholder="Escribe tu publicación..."
+      ></textarea>
+    </div>
+    <button class="btn btn-success w-100" (click)="crearPublicacion()">Publicar</button>
+  </div>
+
+  <h2 class="text-center mb-4">📰 Publicaciones</h2>
+  <div *ngIf="cargando" class="text-center text-muted">Cargando publicaciones...</div>
+
+  <div *ngIf="!cargando">
+    <div *ngFor="let pub of publicaciones" class="card mb-4 shadow-sm border-0">
+      <div class="card-body">
+        <div class="d-flex align-items-center mb-2">
+          <div
+            class="rounded-circle bg-success text-white d-flex align-items-center justify-content-center me-2"
+            style="width: 40px; height: 40px; font-size: 18px"
+          >
+            👤
+          </div>
+          <div>
+            <h6 class="mb-0 text-success fw-bold">{{ getNombreUsuario(pub.id_usuario) }}</h6>
+            <small class="text-muted"
+              >📅 {{ pub.fecha_publicacion | date : 'dd/MM/yyyy - hh:mm a' }}</small
+            >
+          </div>
+        </div>
+
+        <p class="card-text">{{ pub.contenido || 'Sin contenido disponible.' }}</p>
+
+        <div class="mt-3">
+          <button
+            class="btn btn-outline-primary btn-sm me-2"
+            (click)="toggleComentarios(pub.id_publicacion)"
+          >
+            {{ mostrarComentarios[pub.id_publicacion] ? 'Ocultar comentarios' : 'Ver comentarios' }}
+          </button>
+        </div>
+
+        <div *ngIf="mostrarComentarios[pub.id_publicacion]" class="mt-3 border-top pt-3">
+          <h6 class="text-secondary">💬 Comentarios</h6>
+
+          <div *ngIf="!comentarios[pub.id_publicacion]" class="text-muted">
+            Cargando comentarios...
+          </div>
+          <ul
+            class="list-group mb-2"
+            *ngIf="comentarios[pub.id_publicacion] && comentarios[pub.id_publicacion].length > 0"
+          >
+            <li
+              *ngFor="let com of comentarios[pub.id_publicacion]"
+              class="list-group-item border-0 ps-0"
+            >
+              <strong class="text-success">{{ getNombreUsuario(com.id_usuario) }}:</strong>
+              <span>{{ com.contenido }}</span>
+            </li>
+          </ul>
+
+          <div *ngIf="comentarios[pub.id_publicacion]?.length === 0" class="text-muted mb-2">
+            No hay comentarios todavía.
+          </div>
+
+          <div class="input-group mt-2">
+            <input
+              type="text"
+              [(ngModel)]="nuevoComentario[pub.id_publicacion]"
+              class="form-control"
+              placeholder="Escribe un comentario..."
+            />
+            <button class="btn btn-success" (click)="agregarComentario(pub.id_publicacion)">
+              Comentar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="my-4" />
+
+  <h2 class="text-center mb-4">🧑‍🌾 Mis Publicaciones</h2>
+  <div *ngIf="misPublicaciones.length === 0" class="text-center text-muted">
+    No has publicado nada aún.
+  </div>
+
+  <div *ngFor="let pub of misPublicaciones" class="card mb-3 shadow-sm border-success">
+    <div class="card-body">
+      <p class="card-text">{{ pub.contenido || 'Sin contenido disponible.' }}</p>
+      <small class="text-muted"
+        >📅 {{ pub.fecha_publicacion | date : 'dd/MM/yyyy - hh:mm a' }}</small
+      >
+    </div>
+  </div>
+</div>

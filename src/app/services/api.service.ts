@@ -6,10 +6,10 @@ import { Injectable } from '@angular/core';
 })
 export class ApiService {
   // api desplegada en render.com
-  //private baseUrl = 'https://proyecto-agroclima-api.onrender.com';
+  private baseUrl = 'https://proyecto-agroclima-api.onrender.com';
 
   //api local para pruebas
-  private baseUrl = 'http://localhost:3300';
+  /* private baseUrl = 'http://localhost:3300'; */
 
   constructor(private http: HttpClient) {}
 
