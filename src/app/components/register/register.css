@@ -1,0 +1,340 @@
+/* ------------------- RESET ------------------- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+  overflow: hidden; /* quita cualquier scroll */
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
+    sans-serif;
+  position: relative;
+}
+
+/* ------------------- FONDO ------------------- */
+.background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, #6bb5b8 0%, #8bc6c8 50%, #a8d5b8 100%);
+  z-index: 0;
+}
+
+/* ------------------- NUBES ------------------- */
+.clouds {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.cloud {
+  position: fixed; /* FIXED para que no genere scroll */
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 100px;
+  animation: float 20s infinite ease-in-out;
+}
+
+.cloud:before,
+.cloud:after {
+  content: '';
+  position: absolute;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 100px;
+}
+
+.cloud1 {
+  width: 120px;
+  height: 50px;
+  top: 10%;
+  left: -150px;
+  animation-delay: 0s;
+}
+.cloud1:before {
+  width: 70px;
+  height: 70px;
+  top: -35px;
+  left: 20px;
+}
+.cloud1:after {
+  width: 90px;
+  height: 90px;
+  top: -45px;
+  right: 20px;
+}
+
+.cloud2 {
+  width: 150px;
+  height: 60px;
+  top: 20%;
+  right: -200px;
+  animation: floatReverse 25s infinite ease-in-out;
+}
+.cloud2:before {
+  width: 80px;
+  height: 80px;
+  top: -40px;
+  left: 30px;
+}
+.cloud2:after {
+  width: 100px;
+  height: 100px;
+  top: -50px;
+  right: 30px;
+}
+
+.cloud3 {
+  width: 100px;
+  height: 40px;
+  bottom: 25%;
+  left: -120px;
+  animation-delay: 5s;
+}
+.cloud3:before {
+  width: 60px;
+  height: 60px;
+  top: -30px;
+  left: 15px;
+}
+.cloud3:after {
+  width: 70px;
+  height: 70px;
+  top: -35px;
+  right: 15px;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateX(0) translateY(0);
+  }
+  50% {
+    transform: translateX(120vw) translateY(-20px);
+  }
+}
+
+@keyframes floatReverse {
+  0%,
+  100% {
+    transform: translateX(0) translateY(0);
+  }
+  50% {
+    transform: translateX(-120vw) translateY(20px);
+  }
+}
+
+/* ------------------- SOL ------------------- */
+.sun {
+  position: fixed;
+  width: 100px;
+  height: 100px;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(255, 253, 208, 0.8) 50%,
+    rgba(255, 253, 208, 0) 100%
+  );
+  border-radius: 50%;
+  top: 15%;
+  left: 50%;
+  transform: translateX(-50%);
+  filter: blur(2px);
+}
+
+/* ------------------- LLUVIA ------------------- */
+.rain {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+}
+
+.drop {
+  position: fixed; /* FIXED para que no genere scroll */
+  width: 2px;
+  height: 15px;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.3));
+  border-radius: 50%;
+  animation: fall linear infinite;
+  top: -20px;
+}
+
+@keyframes fall {
+  to {
+    transform: translateY(100vh);
+  }
+}
+
+/* ------------------- HOJAS ------------------- */
+.leaves {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+}
+
+.leaf {
+  position: fixed; /* FIXED para que no genere scroll */
+  width: 20px;
+  height: 20px;
+  font-size: 20px;
+  color: rgba(255, 255, 255, 0.7);
+  animation: leafFall 8s infinite ease-in;
+}
+
+@keyframes leafFall {
+  0% {
+    transform: translateY(-20px) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+/* ------------------- CAMPO ------------------- */
+.field-layer {
+  position: fixed; /* FIXED */
+  bottom: 0;
+  width: 100%;
+  height: 40%;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(139, 195, 74, 0.3) 50%,
+    rgba(139, 195, 74, 0.6) 100%
+  );
+}
+
+.field-rows {
+  position: fixed; /* FIXED */
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.row {
+  position: fixed; /* FIXED */
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    rgba(101, 147, 74, 0.4) 0%,
+    rgba(101, 147, 74, 0.6) 50%,
+    rgba(101, 147, 74, 0.4) 100%
+  );
+  transform-origin: center;
+}
+
+/* ------------------- LOGIN ------------------- */
+.container {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.login-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 50px 60px;
+  border-radius: 40px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  width: 450px;
+  text-align: center;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 35px;
+}
+
+.logo svg {
+  width: 45px;
+  height: 45px;
+}
+
+.logo h1 {
+  font-size: 36px;
+  color: #2c3e50;
+  font-weight: 600;
+}
+
+h2 {
+  font-size: 28px;
+  color: #2c3e50;
+  margin-bottom: 35px;
+  font-weight: 600;
+}
+
+.input-group {
+  margin-bottom: 20px;
+}
+
+input {
+  width: 100%;
+  padding: 18px 25px;
+  border: 2px solid #d1d5db;
+  border-radius: 15px;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  background: #f9fafb;
+}
+
+input:focus {
+  outline: none;
+  border-color: #7cb342;
+  background: white;
+}
+
+input::placeholder {
+  color: #9ca3af;
+}
+
+.btn-login {
+  width: 60%;
+  padding: 16px;
+  background: linear-gradient(135deg, #8bc34a 0%, #7cb342 100%);
+  color: white;
+  border: none;
+  border-radius: 15px;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 15px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(124, 179, 66, 0.3);
+}
+
+.btn-login:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(124, 179, 66, 0.4);
+  background: linear-gradient(135deg, #7cb342 0%, #689f38 100%);
+}
+
+.register-link {
+  margin-top: 25px;
+  font-size: 15px;
+  color: #4b5563;
+}
+
+.register-link a {
+  color: #7cb342;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.register-link a:hover {
+  color: #689f38;
+}

@@ -6,10 +6,13 @@ import { Cultivos } from './components/cultivos/cultivos';
 import { Home } from './components/home/home';
 import { Login } from './components/login/login';
 import { AuthGuard } from './guards/auth.guard';
+import { Register } from './components/register/register';
+
 export const routes: Routes = [
   //ruta para logeo en prueba
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: Login },
+  { path: 'register', component: Register },
   { path: 'home', component: Home, canActivate: [AuthGuard] },
   { path: 'usuarios', component: Usuarios, canActivate: [AuthGuard] },
   { path: 'cultivos', component: Cultivos, canActivate: [AuthGuard] },

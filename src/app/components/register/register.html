@@ -1,1 +1,110 @@
-<p>register works!</p>
+<div class="background">
+  <div class="sun"></div>
+
+  <div class="clouds">
+    <div class="cloud cloud1"></div>
+    <div class="cloud cloud2"></div>
+    <div class="cloud cloud3"></div>
+  </div>
+
+  <div class="rain" id="rain"></div>
+  <div class="leaves" id="leaves"></div>
+
+  <div class="field-layer">
+    <div class="field-rows" id="fieldRows"></div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="login-card">
+    <div class="logo">
+      <svg viewBox="0 0 24 24" fill="#7cb342">
+        <path
+          d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22L6.66,19.7C7.14,19.87 7.64,20 8,20C19,20 22,3 22,3C21,5 14,5.25 9,6.25C4,7.25 2,11.5 2,13.5C2,15.5 3.75,17.25 3.75,17.25C7,8 17,8 17,8Z"
+        />
+      </svg>
+      <h1>AgroClima</h1>
+    </div>
+
+    <h2>Registro de Usuario</h2>
+
+    <form (ngSubmit)="onRegister()">
+      <div class="input-group">
+        <input
+          type="text"
+          name="nombre"
+          [(ngModel)]="nombre"
+          placeholder="Nombre completo"
+          required
+        />
+      </div>
+
+      <div class="input-group">
+        <input
+          type="email"
+          name="correo"
+          [(ngModel)]="correo"
+          placeholder="Correo electrónico"
+          required
+        />
+      </div>
+
+      <div class="input-group">
+        <input
+          type="password"
+          name="contrasena"
+          [(ngModel)]="contrasena"
+          placeholder="Contraseña"
+          required
+        />
+      </div>
+
+      <div class="input-group">
+        <input type="text" name="ubicacion" [(ngModel)]="ubicacion" placeholder="Ubicación" />
+      </div>
+
+      <button type="submit" class="btn-login">Registrarme</button>
+    </form>
+
+    <div class="register-link">
+      ¿Ya tienes cuenta?
+      <a routerLink="/login" class="register-btn">Inicia sesión</a>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Efectos visuales (idénticos al login)
+  const rainContainer = document.getElementById('rain');
+  for (let i = 0; i < 50; i++) {
+    const drop = document.createElement('div');
+    drop.className = 'drop';
+    drop.style.left = Math.random() * 100 + '%';
+    drop.style.top = Math.random() * -100 + 'px';
+    drop.style.animationDuration = Math.random() * 2 + 3 + 's';
+    drop.style.animationDelay = Math.random() * 5 + 's';
+    rainContainer.appendChild(drop);
+  }
+
+  const leavesContainer = document.getElementById('leaves');
+  const leafSymbols = ['🍃', '🌿'];
+  for (let i = 0; i < 15; i++) {
+    const leaf = document.createElement('div');
+    leaf.className = 'leaf';
+    leaf.textContent = leafSymbols[Math.floor(Math.random() * leafSymbols.length)];
+    leaf.style.left = Math.random() * 100 + '%';
+    leaf.style.animationDuration = Math.random() * 3 + 5 + 's';
+    leaf.style.animationDelay = Math.random() * 5 + 's';
+    leavesContainer.appendChild(leaf);
+  }
+
+  const fieldRows = document.getElementById('fieldRows');
+  for (let i = 0; i < 12; i++) {
+    const row = document.createElement('div');
+    row.className = 'row';
+    row.style.bottom = i * 8 + '%';
+    row.style.transform = `perspective(200px) rotateX(${45 - i * 2}deg)`;
+    row.style.opacity = 0.3 + i * 0.05;
+    fieldRows.appendChild(row);
+  }
+</script>

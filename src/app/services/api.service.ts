@@ -2,10 +2,14 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ApiService {
-  private baseUrl = 'https://proyecto-agroclima-api.onrender.com';
+  // api desplegada en render.com
+  //private baseUrl = 'https://proyecto-agroclima-api.onrender.com';
+
+  //api local para pruebas
+  private baseUrl = 'http://localhost:3300';
 
   constructor(private http: HttpClient) {}
 
@@ -22,6 +26,6 @@ export class ApiService {
   }
 
   delete(endpoint: string) {
-    return this.http.delete(`${this.baseUrl}/${endpoint}`); 
+    return this.http.delete(`${this.baseUrl}/${endpoint}`);
   }
 }
