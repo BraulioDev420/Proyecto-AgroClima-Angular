@@ -9,7 +9,7 @@ export class ApiService {
   private baseUrl = 'https://proyecto-agroclima-api.onrender.com';
 
   //api local para pruebas
-  /* private baseUrl = 'http://localhost:3300'; */
+  //private baseUrl = 'http://localhost:3300';
 
   constructor(private http: HttpClient) {}
 

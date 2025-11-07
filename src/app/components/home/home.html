@@ -1,1 +1,46 @@
-<h1>Bienvenidos a AgroClima</h1>
+<div>
+  
+
+  <!-- MAIN -->
+  <main>
+    <!-- TARJETA DE BIENVENIDA -->
+<div class="welcome-card">
+  <div class="welcome-content">
+    <h1>¡Bienvenido a AgroClima!</h1>
+    <p>Tu centro de control inteligente para la agricultura moderna.</p>
+    <button onclick="window.location.href='cultivos'"><i class="fas fa-tractor"></i> Ver mis cultivos</button>
+  </div>
+</div>
+
+    <!-- RESUMEN -->
+    <h2>Resumen del Estado</h2>
+    <div class="cards">
+      <div class="card green">
+        <div class="header">
+          <span class="icon"><i class="fas fa-seedling"></i></span>
+          <p class="label">Cultivos activos</p>
+        </div>
+        <div class="value">{{ cultivosActivos() }}</div>
+        <p class="footer"><i class="fas fa-chart-line"></i> +5 nuevos este mes</p>
+      </div>
+
+      <div class="card blue">
+        <div class="header">
+          <span class="icon"><i class="fas fa-water"></i></span>
+          <p class="label">Riegos recientes</p>
+        </div>
+        <div class="value">{{ riegosRecientes() }}</div>
+        <p class="footer"><i class="fas fa-calendar-check"></i> Último hace 3 horas</p>
+      </div>
+
+      <div class="card brown">
+        <div class="header">
+          <span class="icon"><i class="fas fa-sun"></i></span>
+          <p class="label">Pronóstico de hoy</p>
+        </div>
+        <div class="value">{{ pronosticoHoy() }}</div>
+        <p class="footer"><i class="fas fa-cloud-sun"></i> {{ pronosticoDescripcion() }}</p>
+      </div>
+    </div>
+  </main>
+</div>
