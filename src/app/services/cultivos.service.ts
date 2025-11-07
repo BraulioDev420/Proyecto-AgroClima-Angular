@@ -35,6 +35,19 @@ export class CultivosService {
     return this.apiService.get('cultivos/activos/') as Observable<Cultivo[]>;
   }
 
+  // Obtener cultivos activos de un usuario específico
+  getCultivosPorUsuario(id_usuario: number): Observable<any> {
+    return this.apiService.get(`cultivos/usuario/${id_usuario}`).pipe(
+      map((response: any) => {
+        // La API devuelve { mensaje, codigo, data }
+        if (response.codigo === 'OK' && response.data) {
+          return response.data;
+        }
+        return [];
+      })
+    );
+  }
+
   // Obtener un cultivo por ID
   getCultivoById(id: number): Observable<Cultivo[]> {
     return this.apiService.get(`cultivos/activos/${id}`) as Observable<Cultivo[]>;
@@ -50,27 +63,45 @@ export class CultivosService {
     return this.apiService.put('cultivos/', cultivo);
   }
 
-  
+  // Eliminar cultivo (lógico)
+  eliminarCultivo(id: number): Observable<any> {
+    return this.apiService.delete(`cultivos/${id}`);
+  }
 
+  // 💧 OBTENER RIEGOS DE UN CULTIVO
+  getRiegosPorCultivo(id_cultivo: number): Observable<any> {
+    return this.apiService.get(`riegos/cultivos/${id_cultivo}`).pipe(
+      map((response: any) => {
+        // La API devuelve { mensaje, codigo, data }
+        if (response.codigo === 'OK' && response.data) {
+          return response.data;
+        }
+        return [];
+      })
+    );
+  }
+
+  // 📊 PROCESAR DATOS PARA EL DASHBOARD
   procesarDatosDashboard(cultivos: Cultivo[]): DashboardData {
+    // Total de cultivos
     const totalCultivos = cultivos.length;
 
-  
-    const areaTotal = Math.round(totalCultivos * 1.5 * 10) / 10;
+    // Área total (simulada - puedes agregar este campo a tu BD)
+    const areaTotal = Math.round(totalCultivos * 1.5 * 10) / 10; // Promedio 1.5 ha por cultivo
 
-   
+    // Rendimiento (simulado)
     const rendimiento = totalCultivos * 10; // 10 toneladas por cultivo promedio
 
-   
+    // Ingresos (simulado)
     const ingresos = rendimiento * 150; // $150 por tonelada
 
-   
+    // Contar cultivos por tipo
     const cultivosPorTipo = this.contarPorTipo(cultivos);
 
-   
+    // Contar cultivos por estado
     const cultivosPorEstado = this.contarPorEstado(cultivos);
 
-    
+    // Contar siembras por mes
     const cultivosMensuales = this.contarPorMes(cultivos);
 
     return {
@@ -98,7 +129,7 @@ export class CultivosService {
         tipo: tipo,
         cantidad: conteo[tipo]
       }))
-      .sort((a, b) => b.cantidad - a.cantidad); 
+      .sort((a, b) => b.cantidad - a.cantidad); // Ordenar por cantidad descendente
   }
 
   // Contar cultivos por estado

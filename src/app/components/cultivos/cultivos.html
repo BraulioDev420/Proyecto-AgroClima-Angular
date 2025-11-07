@@ -1,5 +1,49 @@
 <div class="cultivos-dashboard">
 
+<!-- 🌍 MODAL DE SOLICITUD DE UBICACIÓN -->
+<div *ngIf="mostrarModalUbicacion" class="modal-overlay">
+  <div class="modal-ubicacion">
+    <div class="modal-header">
+      <h2>📍 Ubicación del Clima</h2>
+    </div>
+    
+    <div class="modal-body">
+      <div class="ubicacion-icon">🌍</div>
+      <p class="modal-mensaje">
+        ¿Deseas compartir tu ubicación para obtener datos climáticos precisos de tu zona?
+      </p>
+      <p class="modal-submensaje">
+        Esto nos permitirá darte recomendaciones agrícolas más precisas para tu cultivo.
+      </p>
+      
+      <div class="modal-info">
+        <div class="info-item">
+          <span class="info-icon">✅</span>
+          <span>Datos climáticos en tiempo real</span>
+        </div>
+        <div class="info-item">
+          <span class="info-icon">🌱</span>
+          <span>Recomendaciones personalizadas</span>
+        </div>
+        <div class="info-item">
+          <span class="info-icon">🔒</span>
+          <span>Tu ubicación es privada y segura</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="modal-footer">
+      <button class="btn-rechazar" (click)="rechazarUbicacion()">
+        ❌ No, usar ubicación predeterminada
+      </button>
+      <button class="btn-aceptar" (click)="aceptarUbicacion()">
+        ✅ Sí, compartir ubicación
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- TARJETAS DE RESUMEN -->
 <section class="cards">
   <div class="card">
     <div class="card-icon">🌱</div>
@@ -38,118 +82,171 @@
   </div>
 </section>
 
-  <div class="dashboard-container">
-    <h2>📊 Panel de Análisis</h2>
+<!-- PANEL DE ANÁLISIS -->
+<div class="dashboard-container">
+  <h2>📊 Panel de Análisis</h2>
 
-    <div class="charts-grid">
-      <div class="chart-card">
-        <h3>Rendimiento General</h3>
+  <div class="charts-grid">
+    <div class="chart-card">
+      <h3>Rendimiento General</h3>
+      <div class="chart-wrapper">
         <canvas id="overviewChart"></canvas>
       </div>
+    </div>
 
-      <div class="chart-card">
-        <h3>Comparativa de Cosechas</h3>
+    <div class="chart-card">
+      <h3>Comparativa de Cosechas</h3>
+      <div class="chart-wrapper">
         <canvas id="yieldChart"></canvas>
       </div>
+    </div>
 
-      <div class="chart-card">
-        <h3>Distribución por Tipo</h3>
+    <div class="chart-card">
+      <h3>Distribución por Tipo</h3>
+      <div class="chart-wrapper">
         <canvas id="pieChart"></canvas>
       </div>
     </div>
   </div>
+</div>
 
-  <section class="tabla-cultivos">
-    <h2>🌱 Cultivos Activos</h2>
-    <div class="table-wrapper">
-      <table>
-        <thead>
-          <tr>
-            <th>Cultivo</th>
-            <th>Lote</th>
-            <th>Área</th>
-            <th>Estado</th>
-            <th>Última actualización</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><strong>Maíz</strong></td>
-            <td>17</td>
-            <td>4.6 ha</td>
-            <td><span class="estado crecimiento">🌿 Crecimiento</span></td>
-            <td>05/11/2025</td>
-          </tr>
-          <tr>
-            <td><strong>Café</strong></td>
-            <td>22</td>
-            <td>3.2 ha</td>
-            <td><span class="estado recoleccion">☀️ Recolección</span></td>
-            <td>02/11/2025</td>
-          </tr>
-          <tr>
-            <td><strong>Papa</strong></td>
-            <td>9</td>
-            <td>2 ha</td>
-            <td><span class="estado siembra">🌾 Siembra</span></td>
-            <td>29/10/2025</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
+<!-- TABLA DINÁMICA DE CULTIVOS ACTIVOS -->
+<section class="tabla-cultivos">
+  <h2>🌱 Cultivos Activos</h2>
+  
+  <!-- Mensaje de carga -->
+  <div *ngIf="cargando" class="mensaje-carga">
+    <p>⏳ Cargando cultivos...</p>
+  </div>
 
-  <!-- TAREAS Y CLIMA -->
-  <section class="extras">
-    <div class="tareas">
-      <h2>🧑‍🌾 Próximas Tareas</h2>
-      <ul>
-        <li>
-          <div class="tarea-info">
-            <strong>Riego</strong>
-            <span class="tarea-detalles">Lote 17 - 06/11/2025</span>
-          </div>
-          <span class="pendiente">Pendiente</span>
-        </li>
-        <li>
-          <div class="tarea-info">
-            <strong>Fertilización</strong>
-            <span class="tarea-detalles">Lote 9 - 08/11/2025</span>
-          </div>
-          <span class="programada">Programada</span>
-        </li>
-      </ul>
-    </div>
+  <!-- Mensaje si no hay cultivos -->
+  <div *ngIf="!cargando && cultivosActivos.length === 0" class="mensaje-vacio">
+    <p>📭 No tienes cultivos activos registrados</p>
+    <p class="submensaje">Comienza agregando tu primer cultivo</p>
+  </div>
 
-    <div class="clima">
-      <h2>🌤️ Clima Actual</h2>
-      <div class="clima-info">
-        <div class="clima-item">
-          <span class="clima-icon">🌡️</span>
-          <div>
-            <p class="clima-label">Temperatura</p>
-            <p class="clima-value">28°C</p>
-          </div>
+  <!-- Tabla con datos reales -->
+  <div class="table-wrapper" *ngIf="!cargando && cultivosActivos.length > 0">
+    <table>
+      <thead>
+        <tr>
+          <th>Cultivo</th>
+          <th>ID</th>
+          <th>Fecha Siembra</th>
+          <th>Estado</th>
+          <th>Última actualización</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let cultivo of cultivosActivos">
+          <td><strong>{{ cultivo.tipo_cultivo | titlecase }}</strong></td>
+          <td>{{ cultivo.id_cultivo }}</td>
+          <td>{{ formatearFecha(cultivo.fecha_siembra) }}</td>
+          <td>
+            <span [class]="'estado ' + obtenerClaseEstado(cultivo.estado)">
+              {{ obtenerIconoEstado(cultivo.estado) }} {{ cultivo.estado | titlecase }}
+            </span>
+          </td>
+          <td>{{ formatearFecha(cultivo.fecha_siembra) }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- TAREAS Y CLIMA -->
+<section class="extras">
+  <!-- 📋 TAREAS PREDETERMINADAS -->
+  <div class="tareas">
+    <h2>🧑‍🌾 Próximas Tareas</h2>
+    
+    <!-- Lista de tareas destacadas -->
+    <ul *ngIf="tareasDestacadas.length > 0">
+      <li *ngFor="let tarea of tareasDestacadas">
+        <div class="tarea-info">
+          <strong>{{ tarea.nombre }}</strong>
+          <span class="tarea-detalles">
+            {{ tarea.lote ? 'Lote ' + tarea.lote + ' - ' : '' }}{{ tarea.fecha }}
+          </span>
+          <span class="tarea-descripcion">{{ tarea.descripcion }}</span>
         </div>
+        <span [class]="getClaseEstadoTarea(tarea.estado)">
+          {{ getTextoEstado(tarea.estado) }}
+        </span>
+      </li>
+    </ul>
+
+    <!-- Sin tareas -->
+    <div *ngIf="tareasDestacadas.length === 0" class="sin-tareas">
+      <p>✅ No hay tareas pendientes</p>
+      <p class="submensaje">Agrega cultivos para ver tareas</p>
+    </div>
+  </div>
+
+  <!-- 🌤️ CLIMA CON IA -->
+  <div class="clima">
+    <div class="clima-header-bar">
+      <h2>🌤️ Clima Actual <span class="badge-ia">🤖 IA</span></h2>
+      <button 
+        *ngIf="!cargandoClima" 
+        class="btn-actualizar-mini"
+        (click)="actualizarClima()"
+        title="Actualizar clima"
+      >
+        🔄
+      </button>
+    </div>
+    
+    <!-- Cargando clima -->
+    <div *ngIf="cargandoClima" class="loading-mini">
+      <div class="spinner-small"></div>
+      <p>Obteniendo clima...</p>
+    </div>
+
+    <!-- Datos del clima -->
+    <div class="clima-content" *ngIf="!cargandoClima && climaActual">
+      <!-- Header con icono y ubicación -->
+      <div class="clima-principal">
+        <span class="clima-icono-grande">{{ climaActual.icono }}</span>
+        <div class="clima-datos-principales">
+          <h3 class="clima-temperatura">{{ climaActual.temperatura }}°C</h3>
+          <p class="clima-descripcion">{{ climaActual.descripcion }}</p>
+          <p class="clima-ciudad">📍 {{ climaActual.ciudad }}</p>
+        </div>
+      </div>
+
+      <!-- Detalles del clima -->
+      <div class="clima-detalles">
         <div class="clima-item">
           <span class="clima-icon">💧</span>
           <div>
             <p class="clima-label">Humedad</p>
-            <p class="clima-value">70%</p>
+            <p class="clima-value">{{ climaActual.humedad }}%</p>
           </div>
         </div>
         <div class="clima-item">
           <span class="clima-icon">💨</span>
           <div>
             <p class="clima-label">Viento</p>
-            <p class="clima-value">12 km/h</p>
+            <p class="clima-value">{{ climaActual.viento }} km/h</p>
           </div>
         </div>
       </div>
-    </div>
-  </section>
 
-  <footer class="footer">
-    <p>© 2025 AgroClima | Prototipo de visualización de cultivos</p>
-  </footer>
+      <!-- Recomendaciones de la IA -->
+      <div class="clima-recomendaciones" *ngIf="climaActual.recomendaciones && climaActual.recomendaciones.length > 0">
+        <h4>💡 Recomendaciones</h4>
+        <ul>
+          <li *ngFor="let rec of climaActual.recomendaciones">{{ rec }}</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <p>© 2025 AgroClima | Sistema de Gestión Agrícola Inteligente</p>
+</footer>
+
 </div>
