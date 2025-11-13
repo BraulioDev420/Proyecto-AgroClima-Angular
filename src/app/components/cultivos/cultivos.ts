@@ -6,6 +6,7 @@ import { CultivosService, Cultivo, DashboardData } from '../../services/cultivos
 import { AuthService } from '../../services/auth.service';
 import { ClimaIAService, DatosClimaIA } from '../../services/climaai.service';
 import { TareasService, Tarea } from '../../services/tareas.service';
+import { IaPrediccionService } from '../../services/ia-prediccion.service';
 
 Chart.register(...registerables);
 
@@ -14,32 +15,39 @@ Chart.register(...registerables);
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './cultivos.html',
-  styleUrls: ['./cultivos.css']
+  styleUrls: ['./cultivos.css'],
 })
 export class Cultivos implements OnInit, OnDestroy, AfterViewInit {
   dashboardData: DashboardData | null = null;
   cultivos: Cultivo[] = [];
   cultivosActivos: Cultivo[] = [];
   cargando: boolean = true;
-  
+   datos = {
+    temperatura: 0,
+    humedad: 0,
+    dias_sin_lluvia: 0
+  };
+  resultadoRiesgo: string = '';
+  riesgoPlaga: string = '';
+
   // 🤖 CLIMA CON IA
   climaActual: DatosClimaIA | null = null;
   cargandoClima: boolean = false;
   mostrarModalUbicacion: boolean = false;
-  
+
   // 📋 TAREAS PREDETERMINADAS
   tareas: Tarea[] = [];
   tareasDestacadas: Tarea[] = [];
-  
+
   // ➕ CREAR CULTIVO
   mostrarFormulario: boolean = false;
   nuevoCultivo = {
     tipo_cultivo: '',
     fecha_siembra: '',
     fecha_cosecha: '',
-    estado: 'siembra'
+    estado: 'siembra',
   };
-  
+
   idUsuarioActual: number = 0;
   chartRendimiento: Chart | null = null;
   chartCosechas: Chart | null = null;
@@ -53,22 +61,23 @@ export class Cultivos implements OnInit, OnDestroy, AfterViewInit {
     private cultivosService: CultivosService,
     private authService: AuthService,
     private climaIAService: ClimaIAService,
-    private tareasService: TareasService
+    private tareasService: TareasService,
+    private iaPrediccionService: IaPrediccionService
   ) {}
 
   ngOnInit(): void {
     this.obtenerUsuarioActual();
-    
+
     if (this.idUsuarioActual === 0) {
       console.error('❌ No hay usuario logueado');
       alert('Debes iniciar sesión para ver tus cultivos');
       this.cargando = false;
       return;
     }
-    
+
     // Cargar datos
     this.cargarDatos();
-    
+
     // 🌍 SOLICITAR UBICACIÓN AL USUARIO
     this.solicitarUbicacion();
   }
@@ -111,24 +120,25 @@ export class Cultivos implements OnInit, OnDestroy, AfterViewInit {
 
   cargarDatos() {
     this.cargando = true;
-    
+
     this.cultivosService.getCultivosPorUsuario(this.idUsuarioActual).subscribe({
       next: (data) => {
         console.log('✅ Cultivos recibidos:', data);
-        
+
         this.cultivos = data;
-        this.cultivosActivos = data.filter((c: Cultivo) => 
-          c.estado === 'en crecimiento' || c.estado === 'cosechado' || c.estado === 'siembra'
+        this.cultivosActivos = data.filter(
+          (c: Cultivo) =>
+            c.estado === 'en crecimiento' || c.estado === 'cosechado' || c.estado === 'siembra'
         );
-        
+
         this.dashboardData = this.cultivosService.procesarDatosDashboard(data);
-        
+
         // 📋 GENERAR TAREAS BASADAS EN LOS CULTIVOS
         this.generarTareas();
-        
+
         this.cargando = false;
         this.datosListos = true;
-        
+
         // Crear gráficas con un único intento después del render
         setTimeout(() => {
           if (!this.graficasCreadas) {
@@ -140,7 +150,7 @@ export class Cultivos implements OnInit, OnDestroy, AfterViewInit {
         console.error('❌ Error al cargar cultivos:', error);
         this.cargando = false;
         this.manejarErrorCarga(error);
-      }
+      },
     });
   }
 
@@ -167,7 +177,7 @@ export class Cultivos implements OnInit, OnDestroy, AfterViewInit {
       tipo_cultivo: '',
       fecha_siembra: '',
       fecha_cosecha: '',
-      estado: 'siembra'
+      estado: 'siembra',
     };
   }
 
@@ -187,7 +197,7 @@ export class Cultivos implements OnInit, OnDestroy, AfterViewInit {
       fecha_siembra: this.nuevoCultivo.fecha_siembra,
       fecha_cosecha: this.nuevoCultivo.fecha_cosecha || null,
       estado: this.nuevoCultivo.estado,
-      EstLogico: 1
+      EstLogico: 1,
     };
 
     console.log('📤 Enviando cultivo:', cultivoData);
@@ -202,7 +212,7 @@ export class Cultivos implements OnInit, OnDestroy, AfterViewInit {
       error: (error) => {
         console.error('❌ Error al crear cultivo:', error);
         alert('❌ Error al crear cultivo. Intenta nuevamente.');
-      }
+      },
     });
   }
 
@@ -248,7 +258,7 @@ export class Cultivos implements OnInit, OnDestroy, AfterViewInit {
    */
   solicitarUbicacion() {
     const ubicacionGuardada = localStorage.getItem('clima_ubicacion_solicitada');
-    
+
     if (ubicacionGuardada === 'rechazada') {
       console.log('⚠️ Usuario rechazó ubicación previamente, usando predeterminada');
       this.cargarClimaPrederterminado();
@@ -264,9 +274,9 @@ export class Cultivos implements OnInit, OnDestroy, AfterViewInit {
   aceptarUbicacion() {
     this.mostrarModalUbicacion = false;
     this.cargandoClima = true;
-    
+
     console.log('📍 Usuario aceptó compartir ubicación');
-    
+
     this.climaIAService.solicitarUbicacionUsuario().subscribe({
       next: (clima) => {
         console.log('✅ Clima obtenido con ubicación real:', clima);
@@ -277,7 +287,7 @@ export class Cultivos implements OnInit, OnDestroy, AfterViewInit {
       error: (error) => {
         console.error('❌ Error al obtener clima con ubicación:', error);
         this.cargarClimaPrederterminado();
-      }
+      },
     });
   }
 
@@ -297,17 +307,18 @@ export class Cultivos implements OnInit, OnDestroy, AfterViewInit {
   private cargarClimaPrederterminado() {
     this.cargandoClima = true;
     console.log('🔄 Cargando clima predeterminado...');
-    
+
     this.climaIAService.obtenerClimaConIA('Barranquilla, Atlántico').subscribe({
       next: (clima) => {
         console.log('✅ Clima predeterminado cargado:', clima);
         this.climaActual = clima;
+        this.predecirRiesgoPlaga();
         this.cargandoClima = false;
       },
       error: (error) => {
         console.error('❌ Error al cargar clima predeterminado:', error);
         this.cargandoClima = false;
-        
+
         this.climaActual = {
           temperatura: 28,
           humedad: 70,
@@ -317,11 +328,11 @@ export class Cultivos implements OnInit, OnDestroy, AfterViewInit {
           recomendaciones: [
             '🌱 Regar temprano en la mañana',
             '☀️ Proteger cultivos del sol directo',
-            '💧 Mantener humedad constante'
+            '💧 Mantener humedad constante',
           ],
-          ciudad: 'Barranquilla'
+          ciudad: 'Barranquilla',
         };
-      }
+      },
     });
   }
 
@@ -330,7 +341,7 @@ export class Cultivos implements OnInit, OnDestroy, AfterViewInit {
    */
   actualizarClima() {
     const ubicacionAceptada = localStorage.getItem('clima_ubicacion_solicitada') === 'aceptada';
-    
+
     if (ubicacionAceptada) {
       this.cargandoClima = true;
       this.climaIAService.solicitarUbicacionUsuario().subscribe({
@@ -340,7 +351,7 @@ export class Cultivos implements OnInit, OnDestroy, AfterViewInit {
         },
         error: () => {
           this.cargarClimaPrederterminado();
-        }
+        },
       });
     } else {
       this.mostrarModalUbicacion = true;
@@ -359,10 +370,10 @@ export class Cultivos implements OnInit, OnDestroy, AfterViewInit {
     }
 
     console.log('📋 Generando tareas predeterminadas...');
-    
+
     this.tareas = this.tareasService.generarTareasPorCultivos(this.cultivosActivos);
-    
-    this.cultivosActivos.forEach(cultivo => {
+
+    this.cultivosActivos.forEach((cultivo) => {
       const tareasEspecificas = this.tareasService.generarTareasPorTipoCultivo(
         cultivo.tipo_cultivo,
         cultivo.id_cultivo
@@ -371,24 +382,24 @@ export class Cultivos implements OnInit, OnDestroy, AfterViewInit {
     });
 
     this.tareasDestacadas = this.tareasService.obtenerTareasDestacadas(this.tareas);
-    
+
     console.log('✅ Tareas generadas:', this.tareasDestacadas);
   }
 
   getClaseEstadoTarea(estado: string): string {
     const clases: { [key: string]: string } = {
-      'pendiente': 'pendiente',
-      'programada': 'programada',
-      'completada': 'completada'
+      pendiente: 'pendiente',
+      programada: 'programada',
+      completada: 'completada',
     };
     return clases[estado] || 'programada';
   }
 
   getTextoEstado(estado: string): string {
     const textos: { [key: string]: string } = {
-      'pendiente': 'Pendiente',
-      'programada': 'Programada',
-      'completada': 'Completada'
+      pendiente: 'Pendiente',
+      programada: 'Programada',
+      completada: 'Completada',
     };
     return textos[estado] || 'Programada';
   }
@@ -404,7 +415,7 @@ export class Cultivos implements OnInit, OnDestroy, AfterViewInit {
         ingresos: 0,
         cultivosPorTipo: [],
         cultivosPorEstado: [],
-        cultivosMensuales: []
+        cultivosMensuales: [],
       };
     }
   }
@@ -426,12 +437,12 @@ export class Cultivos implements OnInit, OnDestroy, AfterViewInit {
     const estadoLower = estado.toLowerCase();
     const clases: { [key: string]: string } = {
       'en crecimiento': 'crecimiento',
-      'crecimiento': 'crecimiento',
-      'cosechado': 'recoleccion',
-      'recoleccion': 'recoleccion',
-      'siembra': 'siembra',
-      'finalizado': 'finalizado',
-      'perdido': 'perdido'
+      crecimiento: 'crecimiento',
+      cosechado: 'recoleccion',
+      recoleccion: 'recoleccion',
+      siembra: 'siembra',
+      finalizado: 'finalizado',
+      perdido: 'perdido',
     };
     return clases[estadoLower] || 'otro';
   }
@@ -440,12 +451,12 @@ export class Cultivos implements OnInit, OnDestroy, AfterViewInit {
     const estadoLower = estado.toLowerCase();
     const iconos: { [key: string]: string } = {
       'en crecimiento': '🌿',
-      'crecimiento': '🌿',
-      'cosechado': '✅',
-      'recoleccion': '☀️',
-      'siembra': '🌾',
-      'finalizado': '✔️',
-      'perdido': '❌'
+      crecimiento: '🌿',
+      cosechado: '✅',
+      recoleccion: '☀️',
+      siembra: '🌾',
+      finalizado: '✔️',
+      perdido: '❌',
     };
     return iconos[estadoLower] || '🌱';
   }
@@ -462,21 +473,23 @@ export class Cultivos implements OnInit, OnDestroy, AfterViewInit {
       this.chartRendimiento = null;
     }
 
-    const labels = this.dashboardData.cultivosMensuales.map(m => m.mes);
-    const data = this.dashboardData.cultivosMensuales.map(m => m.cantidad);
+    const labels = this.dashboardData.cultivosMensuales.map((m) => m.mes);
+    const data = this.dashboardData.cultivosMensuales.map((m) => m.cantidad);
 
     this.chartRendimiento = new Chart(canvas, {
       type: 'line',
       data: {
         labels: labels,
-        datasets: [{
-          label: 'Siembras por Mes',
-          data: data,
-          borderColor: '#66bb6a',
-          backgroundColor: 'rgba(102, 187, 106, 0.2)',
-          tension: 0.4,
-          fill: true
-        }]
+        datasets: [
+          {
+            label: 'Siembras por Mes',
+            data: data,
+            borderColor: '#66bb6a',
+            backgroundColor: 'rgba(102, 187, 106, 0.2)',
+            tension: 0.4,
+            fill: true,
+          },
+        ],
       },
       options: {
         responsive: true,
@@ -484,10 +497,10 @@ export class Cultivos implements OnInit, OnDestroy, AfterViewInit {
         plugins: {
           legend: {
             display: true,
-            position: 'top'
-          }
-        }
-      }
+            position: 'top',
+          },
+        },
+      },
     });
     console.log('✅ overviewChart creado');
   }
@@ -504,30 +517,32 @@ export class Cultivos implements OnInit, OnDestroy, AfterViewInit {
       this.chartCosechas = null;
     }
 
-    const labels = this.dashboardData.cultivosPorEstado.map(e => 
-      e.estado.charAt(0).toUpperCase() + e.estado.slice(1)
+    const labels = this.dashboardData.cultivosPorEstado.map(
+      (e) => e.estado.charAt(0).toUpperCase() + e.estado.slice(1)
     );
-    const data = this.dashboardData.cultivosPorEstado.map(e => e.cantidad);
+    const data = this.dashboardData.cultivosPorEstado.map((e) => e.cantidad);
 
     this.chartCosechas = new Chart(canvas, {
       type: 'bar',
       data: {
         labels: labels,
-        datasets: [{
-          label: 'Cantidad de Cultivos',
-          data: data,
-          backgroundColor: ['#66bb6a', '#42a5f5', '#ffb300', '#ab47bc']
-        }]
+        datasets: [
+          {
+            label: 'Cantidad de Cultivos',
+            data: data,
+            backgroundColor: ['#66bb6a', '#42a5f5', '#ffb300', '#ab47bc'],
+          },
+        ],
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
           legend: {
-            display: false
-          }
-        }
-      }
+            display: false,
+          },
+        },
+      },
     });
     console.log('✅ yieldChart creado');
   }
@@ -548,17 +563,19 @@ export class Cultivos implements OnInit, OnDestroy, AfterViewInit {
       .sort((a, b) => b.cantidad - a.cantidad)
       .slice(0, 5);
 
-    const labels = cultivosOrdenados.map(c => c.tipo);
-    const data = cultivosOrdenados.map(c => c.cantidad);
+    const labels = cultivosOrdenados.map((c) => c.tipo);
+    const data = cultivosOrdenados.map((c) => c.cantidad);
 
     this.chartDistribucion = new Chart(canvas, {
       type: 'doughnut',
       data: {
         labels: labels,
-        datasets: [{
-          data: data,
-          backgroundColor: ['#66bb6a', '#42a5f5', '#ffb300', '#ab47bc', '#ef5350']
-        }]
+        datasets: [
+          {
+            data: data,
+            backgroundColor: ['#66bb6a', '#42a5f5', '#ffb300', '#ab47bc', '#ef5350'],
+          },
+        ],
       },
       options: {
         responsive: true,
@@ -566,11 +583,49 @@ export class Cultivos implements OnInit, OnDestroy, AfterViewInit {
         plugins: {
           legend: {
             display: true,
-            position: 'bottom'
-          }
-        }
-      }
+            position: 'bottom',
+          },
+        },
+      },
     });
     console.log('✅ pieChart creado');
+  }
+predecir() {
+  this.iaPrediccionService.predecirPlaga(this.datos).subscribe({
+    next: (resp) => {
+      console.log("Respuesta IA:", resp);
+      this.riesgoPlaga = resp.riesgo;
+    },
+    error: (err) => {
+      console.error("Error IA:", err);
+    }
+  });
+}
+
+  predecirRiesgoPlaga() {
+    if (!this.climaActual) {
+      console.error('No hay datos del clima para predecir plagas.');
+      return;
+    }
+
+    this.cargando = true;
+
+    const datos = {
+      temperatura: this.climaActual.temperatura,
+      humedad: this.climaActual.humedad,
+      dias_sin_lluvia: this.climaActual.dias_sin_lluvia,
+    };
+
+    this.iaPrediccionService.predecirPlaga(datos).subscribe({
+      next: (resp) => {
+        console.log('Predicción IA:', resp);
+        this.riesgoPlaga = resp.riesgo; // almacena el resultado de la IA
+        this.cargando = false;
+      },
+      error: (err) => {
+        console.error('Error IA:', err);
+        this.cargando = false;
+      },
+    });
   }
 }

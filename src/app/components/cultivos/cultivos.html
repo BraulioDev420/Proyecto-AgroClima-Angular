@@ -1,314 +1,348 @@
 <div class="cultivos-dashboard">
+  <!-- 🌍 MODAL DE SOLICITUD DE UBICACIÓN -->
+  <div *ngIf="mostrarModalUbicacion" class="modal-overlay">
+    <div class="modal-ubicacion">
+      <div class="modal-header">
+        <h2>📍 Ubicación del Clima</h2>
+      </div>
 
-<!-- 🌍 MODAL DE SOLICITUD DE UBICACIÓN -->
-<div *ngIf="mostrarModalUbicacion" class="modal-overlay">
-  <div class="modal-ubicacion">
-    <div class="modal-header">
-      <h2>📍 Ubicación del Clima</h2>
-    </div>
-    
-    <div class="modal-body">
-      <div class="ubicacion-icon">🌍</div>
-      <p class="modal-mensaje">
-        ¿Deseas compartir tu ubicación para obtener datos climáticos precisos de tu zona?
-      </p>
-      <p class="modal-submensaje">
-        Esto nos permitirá darte recomendaciones agrícolas más precisas para tu cultivo.
-      </p>
-      
-      <div class="modal-info">
-        <div class="info-item">
-          <span class="info-icon">✅</span>
-          <span>Datos climáticos en tiempo real</span>
-        </div>
-        <div class="info-item">
-          <span class="info-icon">🌱</span>
-          <span>Recomendaciones personalizadas</span>
-        </div>
-        <div class="info-item">
-          <span class="info-icon">🔒</span>
-          <span>Tu ubicación es privada y segura</span>
+      <div class="modal-body">
+        <div class="ubicacion-icon">🌍</div>
+        <p class="modal-mensaje">
+          ¿Deseas compartir tu ubicación para obtener datos climáticos precisos de tu zona?
+        </p>
+        <p class="modal-submensaje">
+          Esto nos permitirá darte recomendaciones agrícolas más precisas para tu cultivo.
+        </p>
+
+        <div class="modal-info">
+          <div class="info-item">
+            <span class="info-icon">✅</span>
+            <span>Datos climáticos en tiempo real</span>
+          </div>
+          <div class="info-item">
+            <span class="info-icon">🌱</span>
+            <span>Recomendaciones personalizadas</span>
+          </div>
+          <div class="info-item">
+            <span class="info-icon">🔒</span>
+            <span>Tu ubicación es privada y segura</span>
+          </div>
         </div>
       </div>
+
+      <div class="modal-footer">
+        <button class="btn-rechazar" (click)="rechazarUbicacion()">
+          ❌ No, usar ubicación predeterminada
+        </button>
+        <button class="btn-aceptar" (click)="aceptarUbicacion()">✅ Sí, compartir ubicación</button>
+      </div>
     </div>
-    
-    <div class="modal-footer">
-      <button class="btn-rechazar" (click)="rechazarUbicacion()">
-        ❌ No, usar ubicación predeterminada
-      </button>
-      <button class="btn-aceptar" (click)="aceptarUbicacion()">
-        ✅ Sí, compartir ubicación
-      </button>
+  </div>
+
+  <!-- ➕ MODAL FORMULARIO CREAR CULTIVO -->
+  <div *ngIf="mostrarFormulario" class="modal-overlay">
+    <div class="modal-form">
+      <div class="modal-header">
+        <h2>🌱 Nuevo Cultivo</h2>
+        <button class="btn-cerrar" (click)="cerrarFormulario()">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Tipo de Cultivo *</label>
+          <input
+            type="text"
+            [(ngModel)]="nuevoCultivo.tipo_cultivo"
+            placeholder="Ej: Maíz, Arroz, Yuca"
+          />
+        </div>
+
+        <div class="form-group">
+          <label>Fecha de Siembra *</label>
+          <input type="date" [(ngModel)]="nuevoCultivo.fecha_siembra" />
+        </div>
+
+        <div class="form-group">
+          <label>Fecha de Cosecha (Opcional)</label>
+          <input type="date" [(ngModel)]="nuevoCultivo.fecha_cosecha" />
+        </div>
+
+        <div class="form-group">
+          <label>Estado</label>
+          <select [(ngModel)]="nuevoCultivo.estado">
+            <option value="siembra">Siembra</option>
+            <option value="en crecimiento">En Crecimiento</option>
+            <option value="cosechado">Cosechado</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-cancelar" (click)="cerrarFormulario()">Cancelar</button>
+        <button class="btn-guardar" (click)="guardarCultivo()">💾 Guardar Cultivo</button>
+      </div>
     </div>
+  </div>
+
+  <!-- TARJETAS DE RESUMEN -->
+  <section class="cards">
+    <div class="card">
+  <h2>Predicción de plagas con IA</h2>
+
+  <div class="form">
+    <label>Temperatura:</label>
+    <input type="number" [(ngModel)]="datos.temperatura">
+
+    <label>Humedad:</label>
+    <input type="number" [(ngModel)]="datos.humedad">
+
+    <label>Días sin lluvia:</label>
+    <input type="number" [(ngModel)]="datos.dias_sin_lluvia">
+
+    <button (click)="predecir()">Consultar riesgo</button>
+  </div>
+
+  <div *ngIf="riesgoPlaga" class="resultado">
+    <h3>Riesgo estimado:</h3>
+    <p><strong>{{ riesgoPlaga }}</strong></p>
   </div>
 </div>
 
-<!-- ➕ MODAL FORMULARIO CREAR CULTIVO -->
-<div *ngIf="mostrarFormulario" class="modal-overlay">
-  <div class="modal-form">
-    <div class="modal-header">
-      <h2>🌱 Nuevo Cultivo</h2>
-      <button class="btn-cerrar" (click)="cerrarFormulario()">✕</button>
-    </div>
-    
-    <div class="modal-body">
-      <div class="form-group">
-        <label>Tipo de Cultivo *</label>
-        <input 
-          type="text" 
-          [(ngModel)]="nuevoCultivo.tipo_cultivo"
-          placeholder="Ej: Maíz, Arroz, Yuca"
-        >
-      </div>
 
-      <div class="form-group">
-        <label>Fecha de Siembra *</label>
-        <input 
-          type="date" 
-          [(ngModel)]="nuevoCultivo.fecha_siembra"
-        >
-      </div>
+<hr>
 
-      <div class="form-group">
-        <label>Fecha de Cosecha (Opcional)</label>
-        <input 
-          type="date" 
-          [(ngModel)]="nuevoCultivo.fecha_cosecha"
-        >
-      </div>
+<!-- MENSAJE -->
+<div *ngIf="cargando">Calculando...</div>
 
-      <div class="form-group">
-        <label>Estado</label>
-        <select [(ngModel)]="nuevoCultivo.estado">
-          <option value="siembra">Siembra</option>
-          <option value="en crecimiento">En Crecimiento</option>
-          <option value="cosechado">Cosechado</option>
-        </select>
-      </div>
-    </div>
-    
-    <div class="modal-footer">
-      <button class="btn-cancelar" (click)="cerrarFormulario()">
-        Cancelar
-      </button>
-      <button class="btn-guardar" (click)="guardarCultivo()">
-        💾 Guardar Cultivo
-      </button>
-    </div>
-  </div>
+<div *ngIf="resultadoRiesgo && !cargando">
+  <h3>Resultado:</h3>
+
+  <p *ngIf="resultadoRiesgo === 'bajo'" style="color: green;">
+    ✔ Riesgo bajo — Tus cultivos están seguros.
+  </p>
+
+  <p *ngIf="resultadoRiesgo === 'medio'" style="color: orange;">
+    ⚠ Riesgo medio — Toma precauciones.
+  </p>
+
+  <p *ngIf="resultadoRiesgo === 'alto'" style="color: red;">
+    ❗ Riesgo ALTO — Posible aparición de plagas.
+  </p>
 </div>
+    
 
-<!-- TARJETAS DE RESUMEN -->
-<section class="cards">
-  <div class="card">
-    <div class="card-icon">🌱</div>
-    <div class="card-content">
-      <h3>Total Cultivos</h3>
-      <p class="card-value">{{ cultivosActivos.length }}</p>
-      <span class="card-label">Activos</span>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-icon">📏</div>
-    <div class="card-content">
-      <h3>Área Total</h3>
-      <p class="card-value">{{ dashboardData?.areaTotal }} ha</p>
-      <span class="card-label">Hectáreas</span>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-icon">📈</div>
-    <div class="card-content">
-      <h3>Rendimiento</h3>
-      <p class="card-value">{{ dashboardData?.rendimiento }} ton</p>
-      <span class="card-label">Toneladas</span>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-icon">💰</div>
-    <div class="card-content">
-      <h3>Ingresos</h3>
-      <p class="card-value">${{ dashboardData?.ingresos}}</p>
-      <span class="card-label">Este mes</span>
-    </div>
-  </div>
-</section>
-
-<!-- BOTÓN CREAR CULTIVO -->
-<section class="accion-crear">
-  <button class="btn-crear" (click)="abrirFormulario()">
-    ➕ Crear Nuevo Cultivo
-  </button>
-</section>
-
-<!-- PANEL DE ANÁLISIS -->
-<div class="dashboard-container">
-  <h2>📊 Panel de Análisis</h2>
-
-  <div class="charts-grid">
-    <div class="chart-card">
-      <h3>Rendimiento General</h3>
-      <div class="chart-wrapper">
-        <canvas id="overviewChart"></canvas>
+    <div class="card">
+      <div class="card-icon">🌱</div>
+      <div class="card-content">
+        <h3>Total Cultivos</h3>
+        <p class="card-value">{{ cultivosActivos.length }}</p>
+        <span class="card-label">Activos</span>
       </div>
     </div>
 
-    <div class="chart-card">
-      <h3>Comparativa de Cosechas</h3>
-      <div class="chart-wrapper">
-        <canvas id="yieldChart"></canvas>
+    <div class="card">
+      <div class="card-icon">📏</div>
+      <div class="card-content">
+        <h3>Área Total</h3>
+        <p class="card-value">{{ dashboardData?.areaTotal }} ha</p>
+        <span class="card-label">Hectáreas</span>
       </div>
     </div>
 
-    <div class="chart-card">
-      <h3>Distribución por Tipo</h3>
-      <div class="chart-wrapper">
-        <canvas id="pieChart"></canvas>
+    <div class="card">
+      <div class="card-icon">📈</div>
+      <div class="card-content">
+        <h3>Rendimiento</h3>
+        <p class="card-value">{{ dashboardData?.rendimiento }} ton</p>
+        <span class="card-label">Toneladas</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">💰</div>
+      <div class="card-content">
+        <h3>Ingresos</h3>
+        <p class="card-value">${{ dashboardData?.ingresos }}</p>
+        <span class="card-label">Este mes</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- BOTÓN CREAR CULTIVO -->
+  <section class="accion-crear">
+    <button class="btn-crear" (click)="abrirFormulario()">➕ Crear Nuevo Cultivo</button>
+  </section>
+
+  <!-- PANEL DE ANÁLISIS -->
+  <div class="dashboard-container">
+    <h2>📊 Panel de Análisis</h2>
+
+    <div class="charts-grid">
+      <div class="chart-card">
+        <h3>Rendimiento General</h3>
+        <div class="chart-wrapper">
+          <canvas id="overviewChart"></canvas>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <h3>Comparativa de Cosechas</h3>
+        <div class="chart-wrapper">
+          <canvas id="yieldChart"></canvas>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <h3>Distribución por Tipo</h3>
+        <div class="chart-wrapper">
+          <canvas id="pieChart"></canvas>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<!-- TABLA DINÁMICA DE CULTIVOS ACTIVOS -->
-<section class="tabla-cultivos">
-  <h2>🌱 Cultivos Activos</h2>
-  
-  <!-- Mensaje de carga -->
-  <div *ngIf="cargando" class="mensaje-carga">
-    <p>⏳ Cargando cultivos...</p>
-  </div>
+  <!-- TABLA DINÁMICA DE CULTIVOS ACTIVOS -->
+  <section class="tabla-cultivos">
+    <h2>🌱 Cultivos Activos</h2>
 
-  <!-- Mensaje si no hay cultivos -->
-  <div *ngIf="!cargando && cultivosActivos.length === 0" class="mensaje-vacio">
-    <p>📭 No tienes cultivos activos registrados</p>
-    <p class="submensaje">Comienza agregando tu primer cultivo</p>
-  </div>
+    <!-- Mensaje de carga -->
+    <div *ngIf="cargando" class="mensaje-carga">
+      <p>⏳ Cargando cultivos...</p>
+    </div>
 
-  <!-- Tabla con datos reales -->
-  <div class="table-wrapper" *ngIf="!cargando && cultivosActivos.length > 0">
-    <table>
-      <thead>
-        <tr>
-          <th>Cultivo</th>
-          <th>ID</th>
-          <th>Fecha Siembra</th>
-          <th>Estado</th>
-          <th>Última actualización</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let cultivo of cultivosActivos">
-          <td><strong>{{ cultivo.tipo_cultivo | titlecase }}</strong></td>
-          <td>{{ cultivo.id_cultivo }}</td>
-          <td>{{ formatearFecha(cultivo.fecha_siembra) }}</td>
-          <td>
-            <span [class]="'estado ' + obtenerClaseEstado(cultivo.estado)">
-              {{ obtenerIconoEstado(cultivo.estado) }} {{ cultivo.estado | titlecase }}
+    <!-- Mensaje si no hay cultivos -->
+    <div *ngIf="!cargando && cultivosActivos.length === 0" class="mensaje-vacio">
+      <p>📭 No tienes cultivos activos registrados</p>
+      <p class="submensaje">Comienza agregando tu primer cultivo</p>
+    </div>
+
+    <!-- Tabla con datos reales -->
+    <div class="table-wrapper" *ngIf="!cargando && cultivosActivos.length > 0">
+      <table>
+        <thead>
+          <tr>
+            <th>Cultivo</th>
+            <th>ID</th>
+            <th>Fecha Siembra</th>
+            <th>Estado</th>
+            <th>Última actualización</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let cultivo of cultivosActivos">
+            <td>
+              <strong>{{ cultivo.tipo_cultivo | titlecase }}</strong>
+            </td>
+            <td>{{ cultivo.id_cultivo }}</td>
+            <td>{{ formatearFecha(cultivo.fecha_siembra) }}</td>
+            <td>
+              <span [class]="'estado ' + obtenerClaseEstado(cultivo.estado)">
+                {{ obtenerIconoEstado(cultivo.estado) }} {{ cultivo.estado | titlecase }}
+              </span>
+            </td>
+            <td>{{ formatearFecha(cultivo.fecha_siembra) }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- TAREAS Y CLIMA -->
+  <section class="extras">
+    <!-- 📋 TAREAS PREDETERMINADAS -->
+    <div class="tareas">
+      <h2>🧑‍🌾 Próximas Tareas</h2>
+
+      <!-- Lista de tareas destacadas -->
+      <ul *ngIf="tareasDestacadas.length > 0">
+        <li *ngFor="let tarea of tareasDestacadas">
+          <div class="tarea-info">
+            <strong>{{ tarea.nombre }}</strong>
+            <span class="tarea-detalles">
+              {{ tarea.lote ? 'Lote ' + tarea.lote + ' - ' : '' }}{{ tarea.fecha }}
             </span>
-          </td>
-          <td>{{ formatearFecha(cultivo.fecha_siembra) }}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</section>
-
-<!-- TAREAS Y CLIMA -->
-<section class="extras">
-  <!-- 📋 TAREAS PREDETERMINADAS -->
-  <div class="tareas">
-    <h2>🧑‍🌾 Próximas Tareas</h2>
-    
-    <!-- Lista de tareas destacadas -->
-    <ul *ngIf="tareasDestacadas.length > 0">
-      <li *ngFor="let tarea of tareasDestacadas">
-        <div class="tarea-info">
-          <strong>{{ tarea.nombre }}</strong>
-          <span class="tarea-detalles">
-            {{ tarea.lote ? 'Lote ' + tarea.lote + ' - ' : '' }}{{ tarea.fecha }}
+            <span class="tarea-descripcion">{{ tarea.descripcion }}</span>
+          </div>
+          <span [class]="getClaseEstadoTarea(tarea.estado)">
+            {{ getTextoEstado(tarea.estado) }}
           </span>
-          <span class="tarea-descripcion">{{ tarea.descripcion }}</span>
-        </div>
-        <span [class]="getClaseEstadoTarea(tarea.estado)">
-          {{ getTextoEstado(tarea.estado) }}
-        </span>
-      </li>
-    </ul>
+        </li>
+      </ul>
 
-    <!-- Sin tareas -->
-    <div *ngIf="tareasDestacadas.length === 0" class="sin-tareas">
-      <p>✅ No hay tareas pendientes</p>
-      <p class="submensaje">Agrega cultivos para ver tareas</p>
-    </div>
-  </div>
-
-  <!-- 🌤️ CLIMA CON IA -->
-  <div class="clima">
-    <div class="clima-header-bar">
-      <h2>🌤️ Clima Actual <span class="badge-ia">🤖 IA</span></h2>
-      <button 
-        *ngIf="!cargandoClima" 
-        class="btn-actualizar-mini"
-        (click)="actualizarClima()"
-        title="Actualizar clima"
-      >
-        🔄
-      </button>
-    </div>
-    
-    <!-- Cargando clima -->
-    <div *ngIf="cargandoClima" class="loading-mini">
-      <div class="spinner-small"></div>
-      <p>Obteniendo clima...</p>
+      <!-- Sin tareas -->
+      <div *ngIf="tareasDestacadas.length === 0" class="sin-tareas">
+        <p>✅ No hay tareas pendientes</p>
+        <p class="submensaje">Agrega cultivos para ver tareas</p>
+      </div>
     </div>
 
-    <!-- Datos del clima -->
-    <div class="clima-content" *ngIf="!cargandoClima && climaActual">
-      <!-- Header con icono y ubicación -->
-      <div class="clima-principal">
-        <span class="clima-icono-grande">{{ climaActual.icono }}</span>
-        <div class="clima-datos-principales">
-          <h3 class="clima-temperatura">{{ climaActual.temperatura }}°C</h3>
-          <p class="clima-descripcion">{{ climaActual.descripcion }}</p>
-          <p class="clima-ciudad">📍 {{ climaActual.ciudad }}</p>
-        </div>
+    <!-- 🌤️ CLIMA CON IA -->
+    <div class="clima">
+      <div class="clima-header-bar">
+        <h2>🌤️ Clima Actual <span class="badge-ia">🤖 IA</span></h2>
+        <button
+          *ngIf="!cargandoClima"
+          class="btn-actualizar-mini"
+          (click)="actualizarClima()"
+          title="Actualizar clima"
+        >
+          🔄
+        </button>
       </div>
 
-      <!-- Detalles del clima -->
-      <div class="clima-detalles">
-        <div class="clima-item">
-          <span class="clima-icon">💧</span>
-          <div>
-            <p class="clima-label">Humedad</p>
-            <p class="clima-value">{{ climaActual.humedad }}%</p>
+      <!-- Cargando clima -->
+      <div *ngIf="cargandoClima" class="loading-mini">
+        <div class="spinner-small"></div>
+        <p>Obteniendo clima...</p>
+      </div>
+
+      <!-- Datos del clima -->
+      <div class="clima-content" *ngIf="!cargandoClima && climaActual">
+        <!-- Header con icono y ubicación -->
+        <div class="clima-principal">
+          <span class="clima-icono-grande">{{ climaActual.icono }}</span>
+          <div class="clima-datos-principales">
+            <h3 class="clima-temperatura">{{ climaActual.temperatura }}°C</h3>
+            <p class="clima-descripcion">{{ climaActual.descripcion }}</p>
+            <p class="clima-ciudad">📍 {{ climaActual.ciudad }}</p>
           </div>
         </div>
-        <div class="clima-item">
-          <span class="clima-icon">💨</span>
-          <div>
-            <p class="clima-label">Viento</p>
-            <p class="clima-value">{{ climaActual.viento }} km/h</p>
+
+        <!-- Detalles del clima -->
+        <div class="clima-detalles">
+          <div class="clima-item">
+            <span class="clima-icon">💧</span>
+            <div>
+              <p class="clima-label">Humedad</p>
+              <p class="clima-value">{{ climaActual.humedad }}%</p>
+            </div>
+          </div>
+          <div class="clima-item">
+            <span class="clima-icon">💨</span>
+            <div>
+              <p class="clima-label">Viento</p>
+              <p class="clima-value">{{ climaActual.viento }} km/h</p>
+            </div>
           </div>
         </div>
-      </div>
 
-      <!-- Recomendaciones de la IA -->
-      <div class="clima-recomendaciones" *ngIf="climaActual.recomendaciones && climaActual.recomendaciones.length > 0">
-        <h4>💡 Recomendaciones</h4>
-        <ul>
-          <li *ngFor="let rec of climaActual.recomendaciones">{{ rec }}</li>
-        </ul>
+        <!-- Recomendaciones de la IA -->
+        <div
+          class="clima-recomendaciones"
+          *ngIf="climaActual.recomendaciones && climaActual.recomendaciones.length > 0"
+        >
+          <h4>💡 Recomendaciones</h4>
+          <ul>
+            <li *ngFor="let rec of climaActual.recomendaciones">{{ rec }}</li>
+          </ul>
+        </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- FOOTER -->
-<footer class="footer">
-  <p>© 2025 AgroClima | Sistema de Gestión Agrícola Inteligente</p>
-</footer>
-
+  <!-- FOOTER -->
+  <footer class="footer">
+    <p>© 2025 AgroClima | Sistema de Gestión Agrícola Inteligente</p>
+  </footer>
 </div>

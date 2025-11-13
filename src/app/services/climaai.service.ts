@@ -11,6 +11,7 @@ export interface DatosClimaIA {
   recomendaciones: string[];
   ciudad: string;
   coordenadas?: { lat: number; lon: number };
+  dias_sin_lluvia?: number;
 }
 
 @Injectable({
