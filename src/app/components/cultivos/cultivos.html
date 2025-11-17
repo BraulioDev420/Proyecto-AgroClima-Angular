@@ -1,4 +1,5 @@
 <div class="cultivos-dashboard">
+
   <!-- 🌍 MODAL DE SOLICITUD DE UBICACIÓN -->
   <div *ngIf="mostrarModalUbicacion" class="modal-overlay">
     <div class="modal-ubicacion">
@@ -8,6 +9,7 @@
 
       <div class="modal-body">
         <div class="ubicacion-icon">🌍</div>
+
         <p class="modal-mensaje">
           ¿Deseas compartir tu ubicación para obtener datos climáticos precisos de tu zona?
         </p>
@@ -32,9 +34,7 @@
       </div>
 
       <div class="modal-footer">
-        <button class="btn-rechazar" (click)="rechazarUbicacion()">
-          ❌ No, usar ubicación predeterminada
-        </button>
+        <button class="btn-rechazar" (click)="rechazarUbicacion()">❌ No, usar ubicación predeterminada</button>
         <button class="btn-aceptar" (click)="aceptarUbicacion()">✅ Sí, compartir ubicación</button>
       </div>
     </div>
@@ -51,11 +51,7 @@
       <div class="modal-body">
         <div class="form-group">
           <label>Tipo de Cultivo *</label>
-          <input
-            type="text"
-            [(ngModel)]="nuevoCultivo.tipo_cultivo"
-            placeholder="Ej: Maíz, Arroz, Yuca"
-          />
+          <input type="text" [(ngModel)]="nuevoCultivo.tipo_cultivo" placeholder="Ej: Maíz, Arroz, Yuca" />
         </div>
 
         <div class="form-group">
@@ -85,53 +81,56 @@
     </div>
   </div>
 
-  <!-- TARJETAS DE RESUMEN -->
+  <!-- 📌 TARJETAS DE RESUMEN -->
   <section class="cards">
-    <div class="card">
-  <h2>Predicción de plagas con IA</h2>
 
-  <div class="form">
-    <label>Temperatura:</label>
-    <input type="number" [(ngModel)]="datos.temperatura">
+    <!-- 🔮 IA PREDICCIÓN DE PLAGAS -->
+    <div class="card prediccion-card">
+      <div class="card-icon">🧪</div>
 
-    <label>Humedad:</label>
-    <input type="number" [(ngModel)]="datos.humedad">
+      <div class="card-content">
+        <h3>Predicción de Plagas (IA)</h3>
 
-    <label>Días sin lluvia:</label>
-    <input type="number" [(ngModel)]="datos.dias_sin_lluvia">
+        <div class="form-grid">
+          <div>
+            <label>Temperatura (°C):</label>
+            <input type="number" [(ngModel)]="datos.temperatura">
+          </div>
 
-    <button (click)="predecir()">Consultar riesgo</button>
-  </div>
+          <div>
+            <label>Humedad (%):</label>
+            <input type="number" [(ngModel)]="datos.humedad">
+          </div>
 
-  <div *ngIf="riesgoPlaga" class="resultado">
-    <h3>Riesgo estimado:</h3>
-    <p><strong>{{ riesgoPlaga }}</strong></p>
-  </div>
-</div>
+          <div>
+            <label>Días sin lluvia:</label>
+            <input type="number" [(ngModel)]="datos.dias_sin_lluvia">
+          </div>
+        </div>
 
+        <button class="btn-predict" (click)="predecir()">Consultar riesgo</button>
 
-<hr>
+        <div *ngIf="cargando" class="loading">Calculando...</div>
 
-<!-- MENSAJE -->
-<div *ngIf="cargando">Calculando...</div>
+        <div *ngIf="riesgoPlaga && !cargando" class="resultado">
+          <h4>Riesgo estimado:</h4>
 
-<div *ngIf="resultadoRiesgo && !cargando">
-  <h3>Resultado:</h3>
+          <p *ngIf="riesgoPlaga === 'bajo'" class="riesgo bajo">
+            ✔ Riesgo bajo — Tus cultivos están seguros.
+          </p>
 
-  <p *ngIf="resultadoRiesgo === 'bajo'" style="color: green;">
-    ✔ Riesgo bajo — Tus cultivos están seguros.
-  </p>
+          <p *ngIf="riesgoPlaga === 'medio'" class="riesgo medio">
+            ⚠ Riesgo medio — Toma precauciones.
+          </p>
 
-  <p *ngIf="resultadoRiesgo === 'medio'" style="color: orange;">
-    ⚠ Riesgo medio — Toma precauciones.
-  </p>
+          <p *ngIf="riesgoPlaga === 'alto'" class="riesgo alto">
+            ❗ Riesgo ALTO — Posible aparición de plagas.
+          </p>
+        </div>
+      </div>
+    </div>
 
-  <p *ngIf="resultadoRiesgo === 'alto'" style="color: red;">
-    ❗ Riesgo ALTO — Posible aparición de plagas.
-  </p>
-</div>
-    
-
+    <!-- 🌱 TOTAL CULTIVOS -->
     <div class="card">
       <div class="card-icon">🌱</div>
       <div class="card-content">
@@ -141,6 +140,7 @@
       </div>
     </div>
 
+    <!-- 📏 ÁREA TOTAL -->
     <div class="card">
       <div class="card-icon">📏</div>
       <div class="card-content">
@@ -150,6 +150,7 @@
       </div>
     </div>
 
+    <!-- 📈 RENDIMIENTO -->
     <div class="card">
       <div class="card-icon">📈</div>
       <div class="card-content">
@@ -159,6 +160,7 @@
       </div>
     </div>
 
+    <!-- 💰 INGRESOS -->
     <div class="card">
       <div class="card-icon">💰</div>
       <div class="card-content">
@@ -169,7 +171,7 @@
     </div>
   </section>
 
-  <!-- BOTÓN CREAR CULTIVO -->
+  <!-- ➕ BOTÓN CREAR CULTIVO -->
   <section class="accion-crear">
     <button class="btn-crear" (click)="abrirFormulario()">➕ Crear Nuevo Cultivo</button>
   </section>
@@ -202,22 +204,19 @@
     </div>
   </div>
 
-  <!-- TABLA DINÁMICA DE CULTIVOS ACTIVOS -->
+  <!-- TABLA DE CULTIVOS ACTIVOS -->
   <section class="tabla-cultivos">
     <h2>🌱 Cultivos Activos</h2>
 
-    <!-- Mensaje de carga -->
     <div *ngIf="cargando" class="mensaje-carga">
       <p>⏳ Cargando cultivos...</p>
     </div>
 
-    <!-- Mensaje si no hay cultivos -->
     <div *ngIf="!cargando && cultivosActivos.length === 0" class="mensaje-vacio">
       <p>📭 No tienes cultivos activos registrados</p>
       <p class="submensaje">Comienza agregando tu primer cultivo</p>
     </div>
 
-    <!-- Tabla con datos reales -->
     <div class="table-wrapper" *ngIf="!cargando && cultivosActivos.length > 0">
       <table>
         <thead>
@@ -231,9 +230,7 @@
         </thead>
         <tbody>
           <tr *ngFor="let cultivo of cultivosActivos">
-            <td>
-              <strong>{{ cultivo.tipo_cultivo | titlecase }}</strong>
-            </td>
+            <td><strong>{{ cultivo.tipo_cultivo | titlecase }}</strong></td>
             <td>{{ cultivo.id_cultivo }}</td>
             <td>{{ formatearFecha(cultivo.fecha_siembra) }}</td>
             <td>
@@ -250,11 +247,11 @@
 
   <!-- TAREAS Y CLIMA -->
   <section class="extras">
-    <!-- 📋 TAREAS PREDETERMINADAS -->
+
+    <!-- 📋 TAREAS -->
     <div class="tareas">
       <h2>🧑‍🌾 Próximas Tareas</h2>
 
-      <!-- Lista de tareas destacadas -->
       <ul *ngIf="tareasDestacadas.length > 0">
         <li *ngFor="let tarea of tareasDestacadas">
           <div class="tarea-info">
@@ -264,42 +261,34 @@
             </span>
             <span class="tarea-descripcion">{{ tarea.descripcion }}</span>
           </div>
+
           <span [class]="getClaseEstadoTarea(tarea.estado)">
             {{ getTextoEstado(tarea.estado) }}
           </span>
         </li>
       </ul>
 
-      <!-- Sin tareas -->
       <div *ngIf="tareasDestacadas.length === 0" class="sin-tareas">
         <p>✅ No hay tareas pendientes</p>
         <p class="submensaje">Agrega cultivos para ver tareas</p>
       </div>
     </div>
 
-    <!-- 🌤️ CLIMA CON IA -->
+    <!-- 🌤️ CLIMA IA -->
     <div class="clima">
+
       <div class="clima-header-bar">
         <h2>🌤️ Clima Actual <span class="badge-ia">🤖 IA</span></h2>
-        <button
-          *ngIf="!cargandoClima"
-          class="btn-actualizar-mini"
-          (click)="actualizarClima()"
-          title="Actualizar clima"
-        >
-          🔄
-        </button>
+        <button *ngIf="!cargandoClima" class="btn-actualizar-mini" (click)="actualizarClima()">🔄</button>
       </div>
 
-      <!-- Cargando clima -->
       <div *ngIf="cargandoClima" class="loading-mini">
         <div class="spinner-small"></div>
         <p>Obteniendo clima...</p>
       </div>
 
-      <!-- Datos del clima -->
       <div class="clima-content" *ngIf="!cargandoClima && climaActual">
-        <!-- Header con icono y ubicación -->
+
         <div class="clima-principal">
           <span class="clima-icono-grande">{{ climaActual.icono }}</span>
           <div class="clima-datos-principales">
@@ -309,7 +298,6 @@
           </div>
         </div>
 
-        <!-- Detalles del clima -->
         <div class="clima-detalles">
           <div class="clima-item">
             <span class="clima-icon">💧</span>
@@ -318,6 +306,7 @@
               <p class="clima-value">{{ climaActual.humedad }}%</p>
             </div>
           </div>
+
           <div class="clima-item">
             <span class="clima-icon">💨</span>
             <div>
@@ -327,16 +316,7 @@
           </div>
         </div>
 
-        <!-- Recomendaciones de la IA -->
-        <div
-          class="clima-recomendaciones"
-          *ngIf="climaActual.recomendaciones && climaActual.recomendaciones.length > 0"
-        >
-          <h4>💡 Recomendaciones</h4>
-          <ul>
-            <li *ngFor="let rec of climaActual.recomendaciones">{{ rec }}</li>
-          </ul>
-        </div>
+        
       </div>
     </div>
   </section>
@@ -345,4 +325,5 @@
   <footer class="footer">
     <p>© 2025 AgroClima | Sistema de Gestión Agrícola Inteligente</p>
   </footer>
+
 </div>

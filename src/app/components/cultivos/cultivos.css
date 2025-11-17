@@ -833,4 +833,90 @@ tbody tr:hover {
   th, td {
     padding: 8px;
   }
+  .prediccion-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+}
+
+.prediccion-card .card-icon {
+  font-size: 40px;
+  background: #e8f5e9;
+  padding: 15px;
+  border-radius: 15px;
+}
+
+.prediccion-card .card-content h3 {
+  margin-top: 0;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.form-grid label {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.form-grid input {
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid #cccccc;
+  border-radius: 8px;
+}
+
+.btn-predict {
+  margin-top: 15px;
+  padding: 10px 15px;
+  background: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.btn-predict:hover {
+  background: #43a047;
+}
+
+.loading {
+  margin-top: 12px;
+  color: #555;
+  font-style: italic;
+}
+
+.resultado {
+  margin-top: 15px;
+}
+
+.riesgo {
+  font-size: 16px;
+  padding: 10px;
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+.riesgo.bajo {
+  color: #2e7d32;
+  background: #e8f5e9;
+}
+
+.riesgo.medio {
+  color: #ff9800;
+  background: #fff3e0;
+}
+
+.riesgo.alto {
+  color: #d32f2f;
+  background: #ffebee;
+}
+
 }

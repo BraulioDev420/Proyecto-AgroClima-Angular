@@ -1,53 +1,32 @@
 import joblib
 from sklearn.tree import DecisionTreeClassifier
+import random
 
-# Datos de entrenamiento ampliados (más realistas y variados)
-X = [
-    [80, 25, 0],
-    [70, 28, 1],
-    [40, 18, 5],
-    [45, 20, 3],
-    [90, 30, 0],
-    [85, 27, 1],
-    [50, 22, 4],
-    [60, 24, 2],
-    [55, 19, 6],
-    [75, 29, 0],
-    [65, 26, 1],
-    [35, 15, 7],
-    [30, 12, 8],
-    [95, 32, 0],
-    [88, 28, 1],
-    [42, 18, 5],
-    [48, 21, 3],
-    [52, 23, 4],
-    [78, 27, 0],
-    [68, 25, 2],
-    [38, 16, 6],
-    [33, 14, 8],
-    [82, 30, 1],
-    [59, 20, 3],
-    [47, 22, 5],
-    [90, 31, 0],
-    [85, 29, 1],
-    [50, 18, 7],
-    [55, 21, 4],
-    [72, 26, 2],
-]
+X = []
+y = []
 
-# Etiquetas de riesgo: 1 = riesgo, 0 = sin riesgo
-y = [
-    1, 1, 0, 0, 1, 1, 0, 
-    1, 0, 1, 1, 0, 0, 1, 
-    1, 0, 0, 0, 1, 1, 0, 
-    0, 1, 0, 0, 1, 1, 0, 0, 1
-]
+for _ in range(300):
+    temperatura = random.randint(15, 35)
+    humedad = random.randint(20, 100)
+    dias_sin_lluvia = random.randint(0, 8)
 
-# Entrenamiento del modelo
+    # Reglas de clasificación
+    if humedad < 50 and temperatura < 22 and dias_sin_lluvia > 4:
+        etiqueta = 0  # bajo
+    elif 50 <= humedad <= 70 and 22 <= temperatura <= 28 and 2 <= dias_sin_lluvia <= 4:
+        etiqueta = 1  # medio
+    else:
+        etiqueta = 2  # alto
+
+    # ORDEN CORRECTO: temperatura, humedad, dias
+    X.append([temperatura, humedad, dias_sin_lluvia])
+    y.append(etiqueta)
+
+# Entrenar
 modelo = DecisionTreeClassifier()
 modelo.fit(X, y)
 
-# Guardar modelo
+# Guardar
 joblib.dump(modelo, "modelo_plagas.pkl")
 
-print("✅ Modelo entrenado y dataset ampliado.")
+print("Modelo generado y entrenado correctamente")
