@@ -1,0 +1,78 @@
+<div class="plant-prediction-container">
+
+  <!-- 🌿 Card: Detección de Enfermedades -->
+  <div class="card disease-card">
+    <h2 class="card-title">Detección de Enfermedades en Plantas</h2>
+
+    <input type="file" (change)="onFileSelected($event)" accept="image/*" class="file-input">
+
+    <div class="disease-content">
+      <div *ngIf="imagePreview" class="preview">
+        <img [src]="imagePreview" alt="Preview" class="preview-image"/>
+      </div>
+
+      <div *ngIf="result" class="result">
+        <h3>Resultado:</h3>
+        <p><strong>Clase:</strong> {{ result.label }}</p>
+        <p><strong>Confianza:</strong> {{ (result.score*100) | number:'1.0-2' }}%</p>
+
+        <h4>Top 3 predicciones:</h4>
+        <ul>
+          <li *ngFor="let r of result.top_k">
+            {{ r.label }} — {{ (r.score*100) | number:'1.2-2' }}%
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <button class="btn-predict" (click)="uploadAndPredict()" [disabled]="!selectedFile || loading">
+      {{ loading ? 'Procesando...' : 'Predecir' }}
+    </button>
+  </div>
+
+  <!-- 🔮 Card: Predicción de Plagas -->
+  <div class="card plagues-card">
+    <div class="card-icon">🧪</div>
+    <div class="card-content">
+      <h3 class="card-title">Predicción de Plagas (IA)</h3>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Temperatura (°C):</label>
+          <input type="number" [(ngModel)]="datos.temperatura" class="form-input">
+        </div>
+
+        <div class="form-group">
+          <label>Humedad (%):</label>
+          <input type="number" [(ngModel)]="datos.humedad" class="form-input">
+        </div>
+
+        <div class="form-group">
+          <label>Días sin lluvia:</label>
+          <input type="number" [(ngModel)]="datos.dias_sin_lluvia" class="form-input">
+        </div>
+      </div>
+
+      <button class="btn-predict" (click)="predecir()">Consultar riesgo</button>
+
+      <div *ngIf="cargando" class="loading">Calculando...</div>
+
+      <div *ngIf="riesgoPlaga && !cargando" class="resultado">
+        <h4>Riesgo estimado:</h4>
+
+        <p *ngIf="riesgoPlaga === 'bajo'" class="riesgo bajo">
+          ✔ Riesgo bajo — Tus cultivos están seguros.
+        </p>
+
+        <p *ngIf="riesgoPlaga === 'medio'" class="riesgo medio">
+          ⚠ Riesgo medio — Toma precauciones.
+        </p>
+
+        <p *ngIf="riesgoPlaga === 'alto'" class="riesgo alto">
+          ❗ Riesgo ALTO — Posible aparición de plagas.
+        </p>
+      </div>
+    </div>
+  </div>
+
+</div>

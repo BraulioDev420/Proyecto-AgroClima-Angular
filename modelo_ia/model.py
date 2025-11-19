@@ -11,14 +11,16 @@ for _ in range(300):
     dias_sin_lluvia = random.randint(0, 8)
 
     # Reglas de clasificación
-    if humedad < 50 and temperatura < 22 and dias_sin_lluvia > 4:
+    
+    if humedad < 50 and temperatura < 25 and dias_sin_lluvia <= 3:
         etiqueta = 0  # bajo
-    elif 50 <= humedad <= 70 and 22 <= temperatura <= 28 and 2 <= dias_sin_lluvia <= 4:
+    elif 50 <= humedad <= 70 and 25 <= temperatura <= 30 and 2 <= dias_sin_lluvia <= 4:
         etiqueta = 1  # medio
     else:
         etiqueta = 2  # alto
 
-    # ORDEN CORRECTO: temperatura, humedad, dias
+
+    # temperatura, humedad, dias
     X.append([temperatura, humedad, dias_sin_lluvia])
     y.append(etiqueta)
 

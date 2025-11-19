@@ -1,0 +1,81 @@
+.plant-prediction-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px; /* separación entre cards */
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 20px;
+}
+
+.card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+  padding: 25px;
+  flex: 1 1 400px; /* ancho mínimo 400px, crece si hay espacio */
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.disease-card .disease-content {
+  display: flex;
+  gap: 20px; /* separación entre imagen y resultados */
+  flex-wrap: wrap;
+}
+
+.preview-image {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+.plagues-card .form-grid {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 150px;
+}
+
+.btn-predict {
+  background-color: #66bb6a;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-top: 10px;
+  transition: background 0.3s;
+}
+
+.btn-predict:hover {
+  background-color: #57a05a;
+}
+
+.riesgo.bajo {
+  color: #2e7d32;
+  font-weight: bold;
+}
+
+.riesgo.medio {
+  color: #f9a825;
+  font-weight: bold;
+}
+
+.riesgo.alto {
+  color: #c62828;
+  font-weight: bold;
+}
+
+.loading {
+  font-style: italic;
+  color: #555;
+}
