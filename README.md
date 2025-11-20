@@ -1,59 +1,215 @@
-# ProyectoAngular
+🌱 AgroClima – Angular + FastAPI + IA
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.8.
+Predicción de plagas y detección de enfermedades en plantas
 
-## Development server
+Este proyecto integra:
 
-To start a local development server, run:
+✅ Frontend Angular
+✅ Backend FastAPI
+✅ Modelo IA de plagas (Árbol de Decisión)
+✅ Modelo IA de enfermedades en hojas (MobileNetV2)
 
-```bash
+Todo funcionando mediante una API sencilla y optimizada.
+
+📦 Estructura del Proyecto
+Proyecto-AgroClima/
+│── frontend-angular/
+│── modelo_ia/
+│     ├── main.py
+│     ├── modelo_plagas.pkl
+│     ├── plant_model_best.keras
+│     ├── classes.json
+│     ├── requirements.txt
+│     └── ...
+└── README.md
+
+🚀 1. Requisitos Previos
+
+Antes de iniciar, debes tener instalado:
+
+🔧 Backend
+
+Python 3.11+
+
+pip
+
+🎨 Frontend
+
+Node.js (18+)
+
+Angular CLI
+
+🧪 IA
+
+TensorFlow
+
+Scikit-learn
+
+Joblib
+
+⚙️ 2. Instalación del Backend (FastAPI)
+1️⃣ Clonar el repositorio
+git clone https://github.com/BraulioDev420/Proyecto-AgroClima-Angular
+cd Proyecto-AgroClima
+cd modelo_ia
+
+2️⃣ Crear entorno virtual
+Windows
+python -m venv venv
+
+activar entorno virtual
+venv\Scripts\activate
+
+Linux / Mac
+python3 -m venv venv
+source venv/bin/activate
+
+3️⃣ Instalar dependencias
+pip install -r requirements.txt
+
+4️⃣ Ejecutar FastAPI
+
+Desde la carpeta modelo_ia:
+
+uvicorn main:app --reload --port 8000
+
+
+El backend estará disponible en:
+
+👉 http://localhost:8000
+
+👉 Documentación automática Swagger: http://localhost:8000/docs
+
+🎨 3. Instalación del Frontend (Angular)
+
+En la raiz de la carpeta Proyecto-AgroClima-Angular/:
+
+npm install
+
+
+Ejecutar el servidor:
+
 ng serve
-```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
 
-## Code scaffolding
+El frontend estará disponible en:
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+👉 http://localhost:4200
 
-```bash
-ng generate component component-name
-```
+📡 4. Endpoints Principales (FastAPI)
+🔍 Health Check
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Verifica que la API está activa.
 
-```bash
-ng generate --help
-```
+GET /health
 
-## Building
 
-To build the project run:
+Respuesta:
 
-```bash
-ng build
-```
+{"status": "ok"}
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+🐞 Predicción de Plagas (IA)
 
-## Running unit tests
+Endpoint:
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+POST http://localhost:8000/ia/prediccion-plagas
 
-```bash
-ng test
-```
 
-## Running end-to-end tests
+Body (JSON):
 
-For end-to-end (e2e) testing, run:
+{
+  "temperatura": 28,
+  "humedad": 60,
+  "dias_sin_lluvia": 3
+}
 
-```bash
-ng e2e
-```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+Respuesta:
 
-## Additional Resources
+{
+  "riesgo": "medio"
+}
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+🍃 Detección de Enfermedades en Hojas
+
+Endpoint:
+
+POST http://localhost:8000/ia/predict-plant
+
+
+Body: Subir imagen (multipart/form-data)
+
+Respuesta:
+
+{
+  "label": "Apple___Apple_scab",
+  "score": 0.95,
+  "top_k": [
+    {"label": "Apple___Apple_scab", "score": 0.95},
+    {"label": "Apple___Black_rot", "score": 0.03},
+    {"label": "Apple___Cedar_apple_rust", "score": 0.02}
+  ]
+}
+
+🧠 5. Modelos de Inteligencia Artificial
+✔️ Modelo 1: Predicción de Plagas
+
+Entrenado con datos sintéticos.
+
+Basado en reglas climáticas realistas.
+
+Algoritmo: DecisionTreeClassifier
+
+Salida: bajo / medio / alto
+
+Archivo generado:
+
+modelo_plagas.pkl
+
+✔️ Modelo 2: Detección de Enfermedades en Hojas
+
+Dataset: New Plant Diseases Dataset (Augmented)
+
+Arquitectura: MobileNetV2 (96×96)
+
+Entrenamiento con fine-tuning parcial
+
+Accuracy validación ~94%
+
+Archivos:
+
+plant_model_best.keras
+classes.json
+
+🧩 6. Tecnologías Utilizadas
+Backend
+
+FastAPI
+
+TensorFlow
+
+Scikit-Learn
+
+Joblib
+
+Pillow (manejo de imágenes)
+
+NumPy
+
+Frontend
+
+Angular 17
+
+HttpClient
+
+Servicios de consumo REST
+
+👥 7. Autores
+
+Proyecto desarrollado por Braulio Castro, Juan Alvarez, deivid garcia
+
+Ingeniería de Sistemas – 2025
+
+💬 8. Soporte
+
+Si necesitas ayuda, abre un issue en el repositorio o pregunta por el grupo del proyecto.
