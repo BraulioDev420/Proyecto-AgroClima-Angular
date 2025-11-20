@@ -43,7 +43,7 @@ Antes de iniciar, debes tener instalado:
 
 🔧 Backend
 
-Python 3.11+
+Python 3.11
 
 pip
 
