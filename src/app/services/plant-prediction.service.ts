@@ -6,8 +6,11 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class PlantPredictionService {
-  private BASE_URL = 'http://localhost:8000/ia';
+  //url de pruebas local
+  //private BASE_URL = 'http://localhost:8000/ia';
 
+  //url de api desplegada render 
+  private BASE_URL = 'https://proyecto-agroclima-api-ia.onrender.com/ia';
   constructor(private http: HttpClient) { }
 
   // Subir imagen y obtener predicción de planta
